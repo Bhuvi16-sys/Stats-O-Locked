@@ -20,6 +20,7 @@ import { useState, useEffect, ReactNode } from 'react';
 
 import Navbar from "./components/Navbar";
 import Hero from "./components/hero";
+import Footer from './components/Footer';
 
 // ─── TypewriterHeadline ───────────────────────────────────────────────────────
 const TypewriterHeadline = () => {
@@ -612,54 +613,7 @@ export default function App() {
       </section>
 
       {/* ── Contact ── */}
-      <section id="contact" className="py-32 border-t border-white/5 bg-[#050505]">
-        <div className="max-w-7xl mx-auto px-12">
-          <div className="grid lg:grid-cols-2 gap-16">
-            <div>
-              <SectionHeading number="05" subtitle="Reach out for collaborations, queries, or partnership protocols.">
-                The Connection
-              </SectionHeading>
-              <div className="space-y-10">
-                <div className="flex gap-6 items-center">
-                  <div className="w-14 h-14 bg-[#111111] rounded-2xl flex items-center justify-center">
-                    <Mail className="w-6 h-6 text-[#3DDC84]" />
-                  </div>
-                  <div>
-                    <h5 className="text-[10px] font-black text-[#3DDC84] uppercase tracking-[0.4em] mb-1">
-                      Email Protocol
-                    </h5>
-                    <p className="text-2xl font-black tracking-tight">solclub@vitbhopal.ac.in</p>
-                  </div>
-                </div>
-                <div className="flex gap-6 items-center">
-                  <div className="w-14 h-14 bg-[#111111] rounded-2xl flex items-center justify-center">
-                    <Phone className="w-6 h-6 text-[#3DDC84]" />
-                  </div>
-                  <div>
-                    <h5 className="text-[10px] font-black text-[#3DDC84] uppercase tracking-[0.4em] mb-1">
-                      Direct Comms
-                    </h5>
-                    <p className="text-2xl font-black tracking-tight">+91 99939 45259</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-col justify-end gap-12">
-              <div className="bg-[#111111] p-12 rounded-[40px] border border-white/5">
-                <h4 className="text-2xl font-black uppercase mb-8">Pulse Matrix</h4>
-                <div className="flex gap-10">
-                  <Instagram className="w-8 h-8 opacity-40 hover:opacity-100 hover:text-[#3DDC84] cursor-pointer transition-all" />
-                  <Linkedin className="w-8 h-8 opacity-40 hover:opacity-100 hover:text-[#3DDC84] cursor-pointer transition-all" />
-                </div>
-              </div>
-              <footer className="text-[10px] font-black uppercase tracking-[0.4em] opacity-40">
-                © 2026 STATS-O-LOCKED // ALL RIGHTS RESERVED // VIT BHOPAL
-              </footer>
-            </div>
-          </div>
-        </div>
-      </section>
+    <Footer/>
     </div>
   );
 }
