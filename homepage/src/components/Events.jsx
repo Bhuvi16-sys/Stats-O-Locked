@@ -1,51 +1,27 @@
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { Calendar, Clock, ArrowRight, Zap } from 'lucide-react';
 
 const events = [
   {
-    title: 'DataHack 2.0',
-    date: 'April 12, 2025',
-    type: 'Hackathon',
-    typeColor: '#ff4d94',
-    desc: '24-hour data science hackathon. Solve real-world problems with ML & AI.',
-    tag: 'Upcoming',
-    tagColor: '#00f0ff',
-  },
-  {
-    title: 'ML Masterclass',
-    date: 'March 20, 2025',
-    type: 'Workshop',
-    typeColor: '#7c3aed',
-    desc: 'Hands-on deep dive into machine learning with Python, scikit-learn & PyTorch.',
-    tag: 'Past',
+    id: 'techcorp',
+    title: 'TechCorp Summit',
+    date: '2-Day Summit',
+    type: 'MUN Tech Debate',
+    typeColor: '#00f0ff',
+    desc: 'Evaluate contemporary tech issues and debate in a structured MUN format with a hybrid judging system.',
+    tag: 'Completed',
     tagColor: '#94a3b8',
   },
   {
-    title: 'Research Symposium',
-    date: 'February 28, 2025',
-    type: 'Conference',
-    typeColor: '#3b82f6',
-    desc: 'Student paper presentations on AI, NLP, computer vision and data mining.',
-    tag: 'Past',
-    tagColor: '#94a3b8',
-  },
-  {
-    title: 'Stats Bootcamp',
-    date: 'May 5, 2025',
-    type: 'Workshop',
+    id: 'ctrl-lol',
+    title: 'CTRL + LOL',
+    date: 'Week-long virtual',
+    type: 'Meme Marathon',
     typeColor: '#7c3aed',
-    desc: 'Intensive statistics & probability bootcamp for data science aspirants.',
-    tag: 'Upcoming',
-    tagColor: '#00f0ff',
-  },
-  {
-    title: 'Open Source Sprint',
-    date: 'June 1, 2025',
-    type: 'Event',
-    typeColor: '#10b981',
-    desc: 'Contribute to open source data science tools. Mentorship by professionals.',
-    tag: 'Upcoming',
-    tagColor: '#00f0ff',
+    desc: 'Week-long virtual meme-making contest during AdVITya’26 showcasing coding struggles and student life.',
+    tag: 'Completed',
+    tagColor: '#94a3b8',
   },
 ];
 
@@ -253,9 +229,8 @@ export default function Events() {
               </p>
 
               {/* Button */}
-              <motion.a
-                href="../events.html"
-                whileHover={{ gap: '12px', color: '#00f0ff' }}
+              <Link
+                to={`/event-details?id=${ev.id}`}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -267,9 +242,17 @@ export default function Events() {
                   textDecoration: 'none',
                   transition: 'all 0.3s',
                 }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#00f0ff';
+                  e.currentTarget.style.gap = '12px';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'rgba(255,255,255,0.5)';
+                  e.currentTarget.style.gap = '6px';
+                }}
               >
                 View Details <ArrowRight size={14} />
-              </motion.a>
+              </Link>
             </motion.div>
           ))}
         </div>

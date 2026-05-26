@@ -226,10 +226,9 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.5 }}
-            className="text-[1.1rem] text-white/60 mb-8 max-w-[480px] leading-[1.7]"
+            className="text-[0.98rem] md:text-[1.05rem] text-white/75 mb-8 max-w-[560px] leading-relaxed text-left"
           >
-            <span className="text-[#00f0ff] font-semibold">Stats-O-Locked</span> — Where Intelligence Meets Innovation.
-            A community of builders, researchers & data enthusiasts shaping tomorrow.
+            Welcome to <strong className="text-[#00f0ff]">Stats-O-Locked Club</strong>, a vibrant and dynamic student community dedicated to fostering innovation, creativity, and leadership. We aim to create an environment where students can explore their interests, enhance their skills, and work collaboratively on meaningful projects.
           </motion.p>
 
           {/* CTAs */}
@@ -240,7 +239,7 @@ export default function Hero() {
             className="flex flex-row gap-4 flex-wrap"
           >
             <motion.a
-              href="../contact.html"
+              href="#/contact"
               className="btn-neon btn-neon-primary no-underline"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
@@ -248,12 +247,12 @@ export default function Hero() {
               Join Us <ArrowRight size={16} />
             </motion.a>
             <motion.a
-              href="../events.html"
+              href="#/events"
               className="btn-neon btn-neon-secondary no-underline"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
             >
-              Explore Projects
+              Explore Events
             </motion.a>
           </motion.div>
 

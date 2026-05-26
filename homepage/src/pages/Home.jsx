@@ -29,7 +29,7 @@ export default function Home() {
       {/* 6. Impact stats */}
       <Stats />
 
-      {/* 7. Team section */}
+      {/* 8. Team section */}
       <TeamSection />
 
       {/* 8. Testimonials */}

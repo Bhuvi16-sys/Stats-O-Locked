@@ -48,9 +48,9 @@ export default function Footer() {
             {/* Social icons */}
             <div style={{ display: 'flex', gap: '12px' }}>
               {[
-                { icon: ExternalLink, href: 'https://www.instagram.com/sol_vitb', color: '#e1306c' },
-                { icon: Link, href: 'https://www.linkedin.com/company/stats-o-locked-club', color: '#0077b5' },
-                { icon: Mail, href: 'mailto:sol@vitbhopal.ac.in', color: '#00f0ff' },
+                { icon: ExternalLink, href: 'https://www.instagram.com/sol_vitb?igsh=eTQ1dGdjNTZldWhj', color: '#e1306c' },
+                { icon: Link, href: 'https://www.linkedin.com/company/stats-o-locked-club/', color: '#0077b5' },
+                { icon: Mail, href: 'mailto:solclub@vitbhopal.ac.in', color: '#00f0ff' },
               ].map(({ icon: Icon, href, color }) => (
                 <motion.a
                   key={href}
@@ -93,20 +93,20 @@ export default function Footer() {
               {
                 title: 'Navigate',
                 links: [
-                  { label: 'Home', href: '#hero' },
-                  { label: 'About', href: '../about.html' },
-                  { label: 'Events', href: '../events.html' },
-                  { label: 'Research', href: '../research.html' },
-                  { label: 'Team', href: '../team.html' },
+                  { label: 'Home', href: '#/' },
+                  { label: 'About', href: '#/about' },
+                  { label: 'Events', href: '#/events' },
+                  { label: 'Research', href: '#/research' },
+                  { label: 'Team', href: '#/team' },
                 ],
               },
               {
                 title: 'Connect',
                 links: [
-                  { label: 'Contact Us', href: '../contact.html' },
-                  { label: 'Instagram', href: 'https://www.instagram.com/sol_vitb' },
-                  { label: 'LinkedIn', href: 'https://www.linkedin.com/company/stats-o-locked-club' },
-                  { label: 'Email', href: 'mailto:sol@vitbhopal.ac.in' },
+                  { label: 'Contact Us', href: '#/contact' },
+                  { label: 'Instagram', href: 'https://www.instagram.com/sol_vitb?igsh=eTQ1dGdjNTZldWhj' },
+                  { label: 'LinkedIn', href: 'https://www.linkedin.com/company/stats-o-locked-club/' },
+                  { label: 'Email', href: 'mailto:solclub@vitbhopal.ac.in' },
                 ],
               },
             ].map((col) => (
