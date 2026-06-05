@@ -1,3 +1,4 @@
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Brain, Database, Code2, FlaskConical } from 'lucide-react';
 
@@ -9,6 +10,7 @@ const cards = [
     color: '#7c3aed',
     glow: 'rgba(124, 58, 237, 0.35)',
     borderGlow: 'rgba(124, 58, 237, 0.5)',
+    spotColor: '124,58,237',
   },
   {
     icon: Database,
@@ -17,6 +19,7 @@ const cards = [
     color: '#00f0ff',
     glow: 'rgba(0, 240, 255, 0.25)',
     borderGlow: 'rgba(0, 240, 255, 0.5)',
+    spotColor: '0,240,255',
   },
   {
     icon: Code2,
@@ -25,6 +28,7 @@ const cards = [
     color: '#3b82f6',
     glow: 'rgba(59, 130, 246, 0.3)',
     borderGlow: 'rgba(59, 130, 246, 0.5)',
+    spotColor: '59,130,246',
   },
   {
     icon: FlaskConical,
@@ -33,6 +37,7 @@ const cards = [
     color: '#818cf8',
     glow: 'rgba(129, 140, 248, 0.25)',
     borderGlow: 'rgba(129, 140, 248, 0.5)',
+    spotColor: '129,140,248',
   },
 ];
 
@@ -46,24 +51,130 @@ const cardVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: 'easeOut' } },
 };
 
+/* ── 3D Tilt Card ─────────────────────────────────────────── */
+function TiltCard({ card }) {
+  const Icon = card.icon;
+  const ref = useRef(null);
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [spot, setSpot] = useState({ x: 50, y: 50, opacity: 0 });
+
+  const handleMouseMove = (e) => {
+    const rect = ref.current.getBoundingClientRect();
+    const cx = (e.clientX - rect.left) / rect.width;   // 0→1
+    const cy = (e.clientY - rect.top)  / rect.height;  // 0→1
+    // tilt: max ±15 deg
+    setTilt({ x: -(cy - 0.5) * 26, y: (cx - 0.5) * 26 });
+    setSpot({ x: cx * 100, y: cy * 100, opacity: 1 });
+  };
+
+  const handleMouseLeave = () => {
+    setTilt({ x: 0, y: 0 });
+    setSpot((s) => ({ ...s, opacity: 0 }));
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      variants={cardVariants}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      animate={{ rotateX: tilt.x, rotateY: tilt.y }}
+      transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+      style={{
+        background: 'rgba(255,255,255,0.02)',
+        backdropFilter: 'blur(16px)',
+        border: '1px solid rgba(255,255,255,0.08)',
+        borderRadius: '20px',
+        padding: '36px 32px',
+        cursor: 'default',
+        position: 'relative',
+        overflow: 'hidden',
+        transformStyle: 'preserve-3d',
+        transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
+        willChange: 'transform',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = card.borderGlow;
+        e.currentTarget.style.boxShadow = `0 20px 60px ${card.glow}, inset 0 0 40px rgba(255,255,255,0.02)`;
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
+        e.currentTarget.style.boxShadow = 'none';
+      }}
+    >
+      {/* Radial spotlight that follows mouse */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          borderRadius: '20px',
+          background: `radial-gradient(circle at ${spot.x}% ${spot.y}%, rgba(${card.spotColor},0.18) 0%, transparent 55%)`,
+          opacity: spot.opacity,
+          transition: 'opacity 0.3s ease',
+          pointerEvents: 'none',
+        }}
+      />
+
+      {/* Top gradient line */}
+      <div style={{
+        position: 'absolute', top: 0, left: '30px', right: '30px',
+        height: '1px',
+        background: `linear-gradient(90deg, transparent, ${card.color}, transparent)`,
+        opacity: 0.6,
+      }} />
+
+      {/* Icon */}
+      <motion.div
+        animate={{ rotate: [0, 5, -5, 0] }}
+        transition={{ repeat: Infinity, duration: 6, ease: 'easeInOut' }}
+        style={{
+          width: '56px', height: '56px', borderRadius: '14px',
+          background: `rgba(${card.spotColor}, 0.15)`,
+          border: `1px solid ${card.color}33`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          marginBottom: '24px',
+          transform: 'translateZ(20px)',
+        }}
+      >
+        <Icon size={26} color={card.color} />
+      </motion.div>
+
+      <h3 style={{
+        fontFamily: "'Space Grotesk', sans-serif", fontSize: '1.2rem',
+        fontWeight: 600, color: '#fff', marginBottom: '12px',
+        transform: 'translateZ(10px)',
+      }}>
+        {card.title}
+      </h3>
+
+      <p style={{
+        color: 'rgba(255,255,255,0.5)', fontSize: '0.93rem', lineHeight: 1.7,
+        transform: 'translateZ(5px)',
+      }}>
+        {card.desc}
+      </p>
+
+      {/* Bottom corner accent */}
+      <div style={{
+        position: 'absolute', bottom: '-20px', right: '-20px',
+        width: '100px', height: '100px', borderRadius: '50%',
+        background: `radial-gradient(circle, ${card.color}22 0%, transparent 70%)`,
+      }} />
+    </motion.div>
+  );
+}
+
 export default function Cards() {
   return (
     <section
       id="about"
-      style={{
-        padding: '120px 0 100px',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
+      style={{ padding: '120px 0 100px', position: 'relative', overflow: 'hidden', perspective: '1200px' }}
     >
       {/* Background accent */}
       <div style={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
+        position: 'absolute', top: '50%', left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: '800px',
-        height: '400px',
+        width: '800px', height: '400px',
         background: 'radial-gradient(ellipse, rgba(124,58,237,0.06) 0%, transparent 70%)',
         pointerEvents: 'none',
       }} />
@@ -78,36 +189,22 @@ export default function Cards() {
           style={{ textAlign: 'center', marginBottom: '70px' }}
         >
           <span style={{
-            display: 'inline-block',
-            padding: '5px 16px',
-            borderRadius: '100px',
-            background: 'rgba(0, 240, 255, 0.08)',
-            border: '1px solid rgba(0, 240, 255, 0.25)',
-            color: '#00f0ff',
-            fontSize: '0.8rem',
-            fontFamily: "'Space Grotesk', sans-serif",
-            fontWeight: 500,
-            letterSpacing: '2px',
-            textTransform: 'uppercase',
-            marginBottom: '20px',
+            display: 'inline-block', padding: '5px 16px', borderRadius: '100px',
+            background: 'rgba(0,240,255,0.08)', border: '1px solid rgba(0,240,255,0.25)',
+            color: '#00f0ff', fontSize: '0.8rem',
+            fontFamily: "'Space Grotesk', sans-serif", fontWeight: 500,
+            letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '20px',
           }}>
             What We Do
           </span>
           <h2 style={{
             fontFamily: "'Space Grotesk', sans-serif",
-            fontSize: 'clamp(2rem, 4vw, 3rem)',
-            fontWeight: 700,
-            color: '#fff',
-            marginBottom: '16px',
+            fontSize: 'clamp(2rem,4vw,3rem)', fontWeight: 700,
+            color: '#fff', marginBottom: '16px',
           }}>
             Our Core <span className="gradient-text-cyan">Domains</span>
           </h2>
-          <p style={{
-            color: 'rgba(255,255,255,0.5)',
-            fontSize: '1rem',
-            maxWidth: '500px',
-            margin: '0 auto',
-          }}>
+          <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '1rem', maxWidth: '500px', margin: '0 auto' }}>
             Four pillars that define our club's mission and the future we're building together.
           </p>
         </motion.div>
@@ -124,98 +221,9 @@ export default function Cards() {
             gap: '24px',
           }}
         >
-          {cards.map((card) => {
-            const Icon = card.icon;
-            return (
-              <motion.div
-                key={card.title}
-                variants={cardVariants}
-                whileHover={{
-                  y: -10,
-                  scale: 1.02,
-                  transition: { duration: 0.25 },
-                }}
-                style={{
-                  background: 'rgba(255, 255, 255, 0.02)',
-                  backdropFilter: 'blur(16px)',
-                  border: `1px solid rgba(255,255,255,0.08)`,
-                  borderRadius: '20px',
-                  padding: '36px 32px',
-                  cursor: 'default',
-                  position: 'relative',
-                  overflow: 'hidden',
-                  transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = card.borderGlow;
-                  e.currentTarget.style.boxShadow = `0 20px 60px ${card.glow}, inset 0 0 40px rgba(255,255,255,0.02)`;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
-                  e.currentTarget.style.boxShadow = 'none';
-                }}
-              >
-                {/* Top gradient line */}
-                <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: '30px',
-                  right: '30px',
-                  height: '1px',
-                  background: `linear-gradient(90deg, transparent, ${card.color}, transparent)`,
-                  opacity: 0.6,
-                }} />
-
-                {/* Icon */}
-                <motion.div
-                  animate={{ rotate: [0, 5, -5, 0] }}
-                  transition={{ repeat: Infinity, duration: 6, ease: 'easeInOut' }}
-                  style={{
-                    width: '56px',
-                    height: '56px',
-                    borderRadius: '14px',
-                    background: `rgba(${card.color === '#00f0ff' ? '0,240,255' : card.color === '#7c3aed' ? '124,58,237' : card.color === '#3b82f6' ? '59,130,246' : '129,140,248'}, 0.15)`,
-                    border: `1px solid ${card.color}33`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginBottom: '24px',
-                  }}
-                >
-                  <Icon size={26} color={card.color} />
-                </motion.div>
-
-                <h3 style={{
-                  fontFamily: "'Space Grotesk', sans-serif",
-                  fontSize: '1.2rem',
-                  fontWeight: 600,
-                  color: '#fff',
-                  marginBottom: '12px',
-                }}>
-                  {card.title}
-                </h3>
-
-                <p style={{
-                  color: 'rgba(255,255,255,0.5)',
-                  fontSize: '0.93rem',
-                  lineHeight: 1.7,
-                }}>
-                  {card.desc}
-                </p>
-
-                {/* Bottom corner accent */}
-                <div style={{
-                  position: 'absolute',
-                  bottom: '-20px',
-                  right: '-20px',
-                  width: '100px',
-                  height: '100px',
-                  borderRadius: '50%',
-                  background: `radial-gradient(circle, ${card.color}22 0%, transparent 70%)`,
-                }} />
-              </motion.div>
-            );
-          })}
+          {cards.map((card) => (
+            <TiltCard key={card.title} card={card} />
+          ))}
         </motion.div>
       </div>
     </section>

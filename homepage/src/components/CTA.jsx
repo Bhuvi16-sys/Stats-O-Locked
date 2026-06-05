@@ -107,7 +107,7 @@ export default function CTA() {
           {/* CTA */}
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <motion.a
-              href="../contact.html"
+              href="#/contact"
               className="btn-neon btn-neon-primary"
               whileHover={{ scale: 1.07 }}
               whileTap={{ scale: 0.97 }}
@@ -120,7 +120,7 @@ export default function CTA() {
               Join Now <ArrowRight size={18} />
             </motion.a>
             <motion.a
-              href="../events.html"
+              href="#/events"
               className="btn-neon btn-neon-secondary"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
@@ -149,7 +149,7 @@ export default function CTA() {
             {[
               { platform: 'Instagram', handle: '@sol_vitb', color: '#e1306c' },
               { platform: 'LinkedIn', handle: 'Stats-O-Locked Club', color: '#0077b5' },
-              { platform: 'Email', handle: 'sol@vitbhopal.ac.in', color: '#00f0ff' },
+              { platform: 'Email', handle: 'solclub@vitbhopal.ac.in', color: '#00f0ff' },
             ].map((s) => (
               <div key={s.platform} style={{ textAlign: 'center' }}>
                 <div style={{

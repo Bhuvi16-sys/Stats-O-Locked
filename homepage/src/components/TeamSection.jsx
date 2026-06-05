@@ -19,100 +19,228 @@ import { containerVariants, cardVariants } from './SectionCard';
 
 /* ─── Data ────────────────────────────────────────────────── */
 const teamMembers = [
+  // Leadership Team
   {
-    name: 'Bhuvnesh Sharma',
+    name: 'Shivam Waghule',
     role: 'President',
-    department: 'B.Tech CSE (AI & ML)',
-    avatar: null, // Replace with actual image path e.g. '/team/bhuvnesh.jpg'
+    department: 'Leadership',
+    avatar: null,
     accent: '#00f0ff',
-    socials: {
-      github: 'https://github.com',
-      linkedin: 'https://linkedin.com',
-      twitter: null,
-    },
-  },
-  {
-    name: 'Shreya Agarwal',
-    role: 'Vice President',
-    department: 'B.Tech CSE (Data Science)',
-    avatar: null,
-    accent: '#7c3aed',
-    socials: {
-      github: 'https://github.com',
-      linkedin: 'https://linkedin.com',
-      twitter: 'https://twitter.com',
-    },
-  },
-  {
-    name: 'Arjun Mehra',
-    role: 'Technical Lead',
-    department: 'B.Tech CSE (AI & ML)',
-    avatar: null,
-    accent: '#3b82f6',
-    socials: {
-      github: 'https://github.com',
-      linkedin: 'https://linkedin.com',
-      twitter: null,
-    },
-  },
-  {
-    name: 'Priya Nair',
-    role: 'Research Head',
-    department: 'M.Tech AI',
-    avatar: null,
-    accent: '#10b981',
-    socials: {
-      github: 'https://github.com',
-      linkedin: 'https://linkedin.com',
-      twitter: 'https://twitter.com',
-    },
-  },
-  {
-    name: 'Rohan Gupta',
-    role: 'Events Coordinator',
-    department: 'B.Tech ECE',
-    avatar: null,
-    accent: '#f59e0b',
+    category: 'Leadership',
     socials: {
       github: null,
-      linkedin: 'https://linkedin.com',
-      twitter: 'https://twitter.com',
-    },
-  },
-  {
-    name: 'Ananya Singh',
-    role: 'Design Lead',
-    department: 'B.Tech CSE',
-    avatar: null,
-    accent: '#818cf8',
-    socials: {
-      github: 'https://github.com',
-      linkedin: 'https://linkedin.com',
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
       twitter: null,
     },
   },
   {
-    name: 'Karan Verma',
-    role: 'ML Engineer',
-    department: 'B.Tech CSE (AI & ML)',
-    avatar: null,
-    accent: '#00f0ff',
-    socials: {
-      github: 'https://github.com',
-      linkedin: 'https://linkedin.com',
-      twitter: null,
-    },
-  },
-  {
-    name: 'Divya Patel',
-    role: 'Data Analyst',
-    department: 'B.Tech CSE (Data Science)',
+    name: 'Shagun Gupta',
+    role: 'Vice President',
+    department: 'Leadership',
     avatar: null,
     accent: '#7c3aed',
+    category: 'Leadership',
     socials: {
-      github: 'https://github.com',
-      linkedin: 'https://linkedin.com',
-      twitter: 'https://twitter.com',
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Khyati Mourya',
+    role: 'General Secretary',
+    department: 'Leadership',
+    avatar: null,
+    accent: '#3b82f6',
+    category: 'Leadership',
+    socials: {
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Piyush Singh',
+    role: 'Operational Manager',
+    department: 'Leadership',
+    avatar: null,
+    accent: '#10b981',
+    category: 'Leadership',
+    socials: {
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
+      twitter: null,
+    },
+  },
+
+  // Department Leads & Co-Leads
+  {
+    name: 'Bhuvi Jain',
+    role: 'Technical Lead',
+    department: 'Technical',
+    avatar: null,
+    accent: '#00f0ff',
+    category: 'Department Leads',
+    socials: {
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Ankit',
+    role: 'Technical Co-Lead',
+    department: 'Technical',
+    avatar: null,
+    accent: '#7c3aed',
+    category: 'Department Leads',
+    socials: {
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Yug Wankhede',
+    role: 'Event Management Lead',
+    department: 'Event Management',
+    avatar: null,
+    accent: '#f59e0b',
+    category: 'Department Leads',
+    socials: {
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Sampada Seth',
+    role: 'Event Management Co-Lead',
+    department: 'Event Management',
+    avatar: null,
+    accent: '#10b981',
+    category: 'Department Leads',
+    socials: {
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Kashika',
+    role: 'Event Management Co-Lead',
+    department: 'Event Management',
+    avatar: null,
+    accent: '#818cf8',
+    category: 'Department Leads',
+    socials: {
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Payal Beura',
+    role: 'Creative Lead',
+    department: 'Creative',
+    avatar: null,
+    accent: '#ff4d94',
+    category: 'Department Leads',
+    socials: {
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Shubhankar',
+    role: 'Creative Co-Lead',
+    department: 'Creative',
+    avatar: null,
+    accent: '#f59e0b',
+    category: 'Department Leads',
+    socials: {
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Shivanya Tomar',
+    role: 'Research Lead',
+    department: 'Research',
+    avatar: null,
+    accent: '#3b82f6',
+    category: 'Department Leads',
+    socials: {
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Murtuza Ansari',
+    role: 'Research Co-Lead',
+    department: 'Research',
+    avatar: null,
+    accent: '#00f0ff',
+    category: 'Department Leads',
+    socials: {
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Hamza',
+    role: 'Social Media Lead',
+    department: 'Social Media',
+    avatar: null,
+    accent: '#e1306c',
+    category: 'Department Leads',
+    socials: {
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Rajnaryan Pawar',
+    role: 'Photography Lead',
+    department: 'Photography',
+    avatar: null,
+    accent: '#7c3aed',
+    category: 'Department Leads',
+    socials: {
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Sankalp',
+    role: 'PR & Outreach Lead',
+    department: 'PR & Outreach',
+    avatar: null,
+    accent: '#f59e0b',
+    category: 'Department Leads',
+    socials: {
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Raksha',
+    role: 'PR & Outreach Co-Lead',
+    department: 'PR & Outreach',
+    avatar: null,
+    accent: '#10b981',
+    category: 'Department Leads',
+    socials: {
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
+      twitter: null,
     },
   },
 ];
@@ -362,6 +490,9 @@ function TeamCard({ member }) {
 
 /* ─── Main export ─────────────────────────────────────────── */
 export default function TeamSection() {
+  const leadership = teamMembers.filter((m) => m.category === 'Leadership');
+  const departmentLeads = teamMembers.filter((m) => m.category === 'Department Leads');
+
   return (
     <section
       id="team"
@@ -394,24 +525,87 @@ export default function TeamSection() {
               <span className="gradient-text-cyan">Stats-O-Locked</span>
             </>
           }
-          subtitle="Passionate students and researchers driving innovation in AI, data science, and open-source technology."
+          subtitle="Our club is led by a passionate and dedicated team committed to growth, innovation, and excellence."
         />
 
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-50px' }}
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-            gap: '24px',
-          }}
-        >
-          {teamMembers.map((member) => (
-            <TeamCard key={member.name} member={member} />
-          ))}
-        </motion.div>
+        {/* 1. Leadership Team */}
+        <div style={{ marginBottom: '60px' }}>
+          <h3
+            style={{
+              fontFamily: "'Space Grotesk', sans-serif",
+              fontSize: '1.8rem',
+              fontWeight: 700,
+              color: '#fff',
+              marginBottom: '30px',
+              textAlign: 'center',
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '15px',
+            }}
+          >
+            <span style={{ height: '1px', flex: 1, background: 'linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.2))' }}></span>
+            <span className="gradient-text">Leadership Team</span>
+            <span style={{ height: '1px', flex: 1, background: 'linear-gradient(90deg, rgba(0, 240, 255, 0.2), transparent)' }}></span>
+          </h3>
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-50px' }}
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+              gap: '24px',
+              justifyContent: 'center',
+              maxWidth: '1100px',
+              margin: '0 auto',
+            }}
+          >
+            {leadership.map((member) => (
+              <TeamCard key={member.name} member={member} />
+            ))}
+          </motion.div>
+        </div>
+
+        {/* 2. Department Leads */}
+        <div>
+          <h3
+            style={{
+              fontFamily: "'Space Grotesk', sans-serif",
+              fontSize: '1.8rem',
+              fontWeight: 700,
+              color: '#fff',
+              marginBottom: '30px',
+              textAlign: 'center',
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '15px',
+            }}
+          >
+            <span style={{ height: '1px', flex: 1, background: 'linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.2))' }}></span>
+            <span className="gradient-text-cyan">Department Leads</span>
+            <span style={{ height: '1px', flex: 1, background: 'linear-gradient(90deg, rgba(124, 58, 237, 0.2), transparent)' }}></span>
+          </h3>
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-50px' }}
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+              gap: '24px',
+            }}
+          >
+            {departmentLeads.map((member) => (
+              <TeamCard key={member.name} member={member} />
+            ))}
+          </motion.div>
+        </div>
       </div>
     </section>
   );

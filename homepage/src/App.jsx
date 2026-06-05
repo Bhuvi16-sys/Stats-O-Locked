@@ -9,6 +9,7 @@ import Research from './pages/Research';
 import Contact from './pages/Contact';
 import EventDetails from './pages/EventDetails';
 import Leaderboard from './pages/Leaderboard';
+import Gallery from './pages/Gallery';
 import Footer from './components/Footer';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import CursorGlow from './components/CursorGlow';
@@ -160,6 +161,7 @@ export default function App() {
                   <Route path="/team" element={<Team />} />
                   <Route path="/research" element={<Research />} />
                   <Route path="/contact" element={<Contact />} />
+                  <Route path="/gallery" element={<Gallery />} />
                   <Route path="/event-details" element={<EventDetails />} />
                   <Route path="/leaderboard" element={<Leaderboard />} />
                 </Routes>
