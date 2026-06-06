@@ -12,7 +12,7 @@ import Leaderboard from './pages/Leaderboard';
 import Footer from './components/Footer';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import CursorGlow from './components/CursorGlow';
-import RobotAssistant from './components/RobotAssistant';
+import AmbientGlow from './components/AmbientGlow';
 
 // Intro overlay text animation
 const statuses = [
@@ -60,6 +60,23 @@ function IntroOverlay({ onDone }) {
         gap: '28px',
       }}
     >
+      {/* Animated logo image */}
+      <motion.img
+        src="/logo.jpeg"
+        alt="SOL Logo"
+        initial={{ scale: 0.5, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        style={{
+          width: '90px',
+          height: '90px',
+          borderRadius: '50%',
+          border: '2px solid rgba(0, 240, 255, 0.4)',
+          boxShadow: '0 0 30px rgba(0, 240, 255, 0.2)',
+          objectFit: 'cover',
+        }}
+      />
+
       {/* Animated logo */}
       <motion.div
         initial={{ scale: 0.7, opacity: 0 }}
@@ -131,9 +148,11 @@ export default function App() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#020b16' }}>
+      {/* Ambient glow background */}
+      <AmbientGlow />
+
       {/* Animated cursor glow */}
       <CursorGlow />
-      <RobotAssistant />
 
       {/* Intro overlay */}
       <AnimatePresence>

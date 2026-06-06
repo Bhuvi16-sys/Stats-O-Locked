@@ -112,7 +112,7 @@ export default function Features() {
         }}
       />
 
-      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 40px' }}>
+      <div className="px-6 md:px-10" style={{ maxWidth: '1400px', margin: '0 auto' }}>
         <SectionHeader
           badge="Why Join Us"
           title={

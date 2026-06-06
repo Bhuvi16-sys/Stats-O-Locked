@@ -1,14 +1,12 @@
 /**
- * TeamSection — branch: team-section
+ * TeamSection.jsx
  *
- * Displays team members in a responsive grid. Each card shows:
- *  - Avatar (image or generated initials fallback)
- *  - Name
- *  - Role / designation
- *  - Social links (GitHub, LinkedIn, Twitter)
+ * Displays team members in structured categories:
+ *  - Leadership Team
+ *  - Department Leads
+ *  - Core Members Banner
  *
- * Hover: translateY lift + border glow + social icons appear
- * Compatible with the existing Team.jsx page (can be used there too).
+ * Each card features dynamic initials fallback, role accent coloration, and hover glow effects.
  */
 
 import { useState } from 'react';
@@ -18,12 +16,12 @@ import SectionHeader from './SectionHeader';
 import { containerVariants, cardVariants } from './SectionCard';
 
 /* ─── Data ────────────────────────────────────────────────── */
-const teamMembers = [
+const leadershipTeam = [
   {
-    name: 'Bhuvnesh Sharma',
+    name: 'Shivam Waghule',
     role: 'President',
-    department: 'B.Tech CSE (AI & ML)',
-    avatar: null, // Replace with actual image path e.g. '/team/bhuvnesh.jpg'
+    department: 'Stats-O-Locked Leadership',
+    avatar: null,
     accent: '#00f0ff',
     socials: {
       github: 'https://github.com',
@@ -32,21 +30,21 @@ const teamMembers = [
     },
   },
   {
-    name: 'Shreya Agarwal',
+    name: 'Shagun Gupta',
     role: 'Vice President',
-    department: 'B.Tech CSE (Data Science)',
+    department: 'Stats-O-Locked Leadership',
     avatar: null,
     accent: '#7c3aed',
     socials: {
       github: 'https://github.com',
       linkedin: 'https://linkedin.com',
-      twitter: 'https://twitter.com',
+      twitter: null,
     },
   },
   {
-    name: 'Arjun Mehra',
-    role: 'Technical Lead',
-    department: 'B.Tech CSE (AI & ML)',
+    name: 'Khyati Mourya',
+    role: 'General Secretary',
+    department: 'Stats-O-Locked Leadership',
     avatar: null,
     accent: '#3b82f6',
     socials: {
@@ -56,45 +54,24 @@ const teamMembers = [
     },
   },
   {
-    name: 'Priya Nair',
-    role: 'Research Head',
-    department: 'M.Tech AI',
+    name: 'Piyush Singh',
+    role: 'Operational Manager',
+    department: 'Stats-O-Locked Leadership',
     avatar: null,
     accent: '#10b981',
-    socials: {
-      github: 'https://github.com',
-      linkedin: 'https://linkedin.com',
-      twitter: 'https://twitter.com',
-    },
-  },
-  {
-    name: 'Rohan Gupta',
-    role: 'Events Coordinator',
-    department: 'B.Tech ECE',
-    avatar: null,
-    accent: '#f59e0b',
-    socials: {
-      github: null,
-      linkedin: 'https://linkedin.com',
-      twitter: 'https://twitter.com',
-    },
-  },
-  {
-    name: 'Ananya Singh',
-    role: 'Design Lead',
-    department: 'B.Tech CSE',
-    avatar: null,
-    accent: '#818cf8',
     socials: {
       github: 'https://github.com',
       linkedin: 'https://linkedin.com',
       twitter: null,
     },
   },
+];
+
+const departmentLeads = [
   {
-    name: 'Karan Verma',
-    role: 'ML Engineer',
-    department: 'B.Tech CSE (AI & ML)',
+    name: 'Bhuvi Jain',
+    role: 'Technical Lead',
+    department: 'Technical Department',
     avatar: null,
     accent: '#00f0ff',
     socials: {
@@ -104,15 +81,135 @@ const teamMembers = [
     },
   },
   {
-    name: 'Divya Patel',
-    role: 'Data Analyst',
-    department: 'B.Tech CSE (Data Science)',
+    name: 'Ankit',
+    role: 'Technical Co-Lead',
+    department: 'Technical Department',
+    avatar: null,
+    accent: '#3b82f6',
+    socials: {
+      github: 'https://github.com',
+      linkedin: 'https://linkedin.com',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Yug Wankhede',
+    role: 'Event Management Lead',
+    department: 'Events Department',
+    avatar: null,
+    accent: '#f59e0b',
+    socials: {
+      github: 'https://github.com',
+      linkedin: 'https://linkedin.com',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Sampada Seth & Kashika',
+    role: 'Event Management Co-Lead',
+    department: 'Events Department',
+    avatar: null,
+    accent: '#818cf8',
+    socials: {
+      github: 'https://github.com',
+      linkedin: 'https://linkedin.com',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Payal Beura',
+    role: 'Creative Lead',
+    department: 'Creative Department',
+    avatar: null,
+    accent: '#ec4899',
+    socials: {
+      github: 'https://github.com',
+      linkedin: 'https://linkedin.com',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Shubhankar',
+    role: 'Creative Co-Lead',
+    department: 'Creative Department',
+    avatar: null,
+    accent: '#f43f5e',
+    socials: {
+      github: 'https://github.com',
+      linkedin: 'https://linkedin.com',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Shivanya Tomar',
+    role: 'Research Lead',
+    department: 'Research Department',
+    avatar: null,
+    accent: '#10b981',
+    socials: {
+      github: 'https://github.com',
+      linkedin: 'https://linkedin.com',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Murtuza Ansari',
+    role: 'Research Co-Lead',
+    department: 'Research Department',
+    avatar: null,
+    accent: '#059669',
+    socials: {
+      github: 'https://github.com',
+      linkedin: 'https://linkedin.com',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Hamza',
+    role: 'Social Media Lead',
+    department: 'Social Media Department',
+    avatar: null,
+    accent: '#f59e0b',
+    socials: {
+      github: 'https://github.com',
+      linkedin: 'https://linkedin.com',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Rajnaryan Pawar',
+    role: 'Photography Lead',
+    department: 'Photography Department',
+    avatar: null,
+    accent: '#00f0ff',
+    socials: {
+      github: 'https://github.com',
+      linkedin: 'https://linkedin.com',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Sankalp',
+    role: 'PR & Outreach Lead',
+    department: 'PR & Outreach Department',
     avatar: null,
     accent: '#7c3aed',
     socials: {
       github: 'https://github.com',
       linkedin: 'https://linkedin.com',
-      twitter: 'https://twitter.com',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Raksha',
+    role: 'PR & Outreach Co-Lead',
+    department: 'PR & Outreach Department',
+    avatar: null,
+    accent: '#c084fc',
+    socials: {
+      github: 'https://github.com',
+      linkedin: 'https://linkedin.com',
+      twitter: null,
     },
   },
 ];
@@ -121,6 +218,7 @@ const teamMembers = [
 function AvatarFallback({ name, accent }) {
   const initials = name
     .split(' ')
+    .filter(Boolean)
     .map((n) => n[0])
     .join('')
     .toUpperCase()
@@ -375,7 +473,7 @@ export default function TeamSection() {
       <div
         style={{
           position: 'absolute',
-          top: '50%',
+          top: '30%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
           width: '900px',
@@ -384,8 +482,20 @@ export default function TeamSection() {
           pointerEvents: 'none',
         }}
       />
+      <div
+        style={{
+          position: 'absolute',
+          top: '70%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '900px',
+          height: '500px',
+          background: 'radial-gradient(ellipse, rgba(0,240,255,0.05) 0%, transparent 70%)',
+          pointerEvents: 'none',
+        }}
+      />
 
-      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 40px' }}>
+      <div className="px-6 md:px-10" style={{ maxWidth: '1400px', margin: '0 auto' }}>
         <SectionHeader
           badge="Meet the Team"
           title={
@@ -394,23 +504,121 @@ export default function TeamSection() {
               <span className="gradient-text-cyan">Stats-O-Locked</span>
             </>
           }
-          subtitle="Passionate students and researchers driving innovation in AI, data science, and open-source technology."
+          subtitle="Our club is led by a passionate and dedicated team committed to growth, innovation, and excellence."
         />
 
+        {/* 1. Leadership Team Section */}
+        <div style={{ marginBottom: '60px' }}>
+          <h2 style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontSize: '1.8rem',
+            fontWeight: 700,
+            color: '#fff',
+            marginBottom: '30px',
+            textAlign: 'center',
+            letterSpacing: '1px',
+            textTransform: 'uppercase',
+            background: 'linear-gradient(90deg, #fff, rgba(255,255,255,0.7))',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+          }}>
+            Leadership Team
+          </h2>
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-50px' }}
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+              gap: '24px',
+              maxWidth: '1200px',
+              margin: '0 auto',
+            }}
+          >
+            {leadershipTeam.map((member) => (
+              <TeamCard key={member.name} member={member} />
+            ))}
+          </motion.div>
+        </div>
+
+        {/* 2. Department Leads Section */}
+        <div style={{ marginBottom: '60px' }}>
+          <h2 style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontSize: '1.8rem',
+            fontWeight: 700,
+            color: '#fff',
+            marginBottom: '30px',
+            textAlign: 'center',
+            letterSpacing: '1px',
+            textTransform: 'uppercase',
+            background: 'linear-gradient(90deg, #fff, rgba(255,255,255,0.7))',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+          }}>
+            Department Leads
+          </h2>
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-50px' }}
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+              gap: '24px',
+            }}
+          >
+            {departmentLeads.map((member) => (
+              <TeamCard key={member.name} member={member} />
+            ))}
+          </motion.div>
+        </div>
+
+        {/* 3. Core Members Section */}
         <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.8 }}
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-            gap: '24px',
+            maxWidth: '900px',
+            margin: '60px auto 0',
+            padding: '40px',
+            borderRadius: '24px',
+            background: 'rgba(255, 255, 255, 0.02)',
+            backdropFilter: 'blur(16px)',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            textAlign: 'center',
+            boxShadow: 'inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 20px 40px rgba(0,0,0,0.3)',
           }}
         >
-          {teamMembers.map((member) => (
-            <TeamCard key={member.name} member={member} />
-          ))}
+          <h2 style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontSize: '1.8rem',
+            fontWeight: 700,
+            color: '#fff',
+            marginBottom: '16px',
+            letterSpacing: '1px',
+            textTransform: 'uppercase',
+            background: 'linear-gradient(135deg, #00f0ff, #7c3aed)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+          }}>
+            Core Members
+          </h2>
+          <p style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontSize: '1.05rem',
+            color: 'rgba(255,255,255,0.7)',
+            lineHeight: '1.6',
+            maxWidth: '650px',
+            margin: '0 auto',
+          }}>
+            Our core members are the backbone of the club, actively contributing to planning, execution, and success of all initiatives and events.
+          </p>
         </motion.div>
       </div>
     </section>

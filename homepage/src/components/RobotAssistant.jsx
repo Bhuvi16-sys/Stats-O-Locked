@@ -1,178 +1,365 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
+/* ── Section scroll map ─────────────────────────────────────── */
+// keyword → section id (null = scroll to top)
+const SCROLL_MAP = [
+  { keys: ['about us', 'about', 'who are you', 'who we are', 'what is sol'], id: '#about-us' },
+  { keys: ['events', 'event', 'workshop', 'hackathon', 'upcoming'], id: '#events' },
+  { keys: ['domains', 'core domains', 'pillars', 'innovation', 'leadership', 'tech excellence', 'community'], id: '#domains' },
+  { keys: ['features', 'why join', 'why', 'join', 'benefits'], id: '#features' },
+  { keys: ['stats', 'statistics', 'impact', 'numbers', 'achievements'], id: '#stats' },
+  { keys: ['team', 'members', 'people', 'crew', 'founders'], id: '#team' },
+  { keys: ['testimonials', 'reviews', 'feedback', 'what they say'], id: '#testimonials' },
+  { keys: ['contact', 'reach', 'email', 'connect'], id: '#contact' },
+  { keys: ['home', 'top', 'back', 'start'], id: null },
+];
+
+const RESPONSES = {
+  '#about-us':      "📖 Scrolling to About Us — let me tell you our story!",
+  '#events':        "🗓️ Heading to Events — don't miss our workshops!",
+  '#domains':       "🔬 Taking you to Our Core Domains section!",
+  '#features':      "⚡ Let me show you why you should join SOL!",
+  '#stats':         "📊 Check out our impact statistics!",
+  '#team':          "👥 Meet the brilliant minds of Stats-O-Locked!",
+  '#testimonials':  "💬 See what our members are saying!",
+  '#contact':       "📬 Heading to Contact Us!",
+  null:             "🏠 Back to the top!",
+  unknown:          "🤔 Try: 'about us', 'events', 'team', 'contact'…",
+};
+
+function typeText(setText, text) {
+  setText('');
+  let i = 0;
+  const interval = setInterval(() => {
+    i++;
+    setText(text.slice(0, i));
+    if (i >= text.length) clearInterval(interval);
+  }, 22);
+  return () => clearInterval(interval);
+}
+
+/* ── Component ──────────────────────────────────────────────── */
 export default function RobotAssistant() {
-  const dialogueMap = {
-    home: "👋 Hey! I'm Statsy. Ready to unlock the power of Data & AI?",
-    about: "🧠 Curious about SOL? We're a community of builders and innovators.",
-    events: "📅 Don't miss out! Check out our upcoming workshops and hackathons.",
-    team: "🤝 Meet the brilliant minds driving Stats-O-Locked forward.",
-    research: "🔬 Diving deep into the future. Explore our latest AI research!",
-    contact: "📬 Got questions or want to collaborate? Drop us a line!"
-  };
-
-  const [displayText, setdisplayText] = useState("");
+  const [botText, setBotText]     = useState("👋 Hey! I'm Statsy. Type a section name to navigate!");
+  const [userInput, setUserInput] = useState('');
   const [isHovered, setIsHovered] = useState(false);
-  const [currentId, setCurrentId] = useState("home");
+  const [flash, setFlash]         = useState(false);
+  const inputRef = useRef(null);
 
-  // Typewriter effect on section change
-  useEffect(() => {
-    const text = dialogueMap[currentId] || dialogueMap.home;
-    let i = 0;
-    setdisplayText("");
-    const interval = setInterval(() => {
-      setdisplayText(text.slice(0, i));
-      i++;
-      if (i > text.length) clearInterval(interval);
-    }, 25);
-    return () => clearInterval(interval);
-  }, [currentId]);
+  function handleSubmit(e) {
+    e.preventDefault();
+    const query = userInput.trim().toLowerCase();
+    setUserInput('');
+    if (!query) return;
 
-  // Observer for scroll tracking
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        // Find the most visible intersecting entry (or just the first one)
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && dialogueMap[entry.target.id] && entry.target.id !== currentId) {
-            setCurrentId(entry.target.id);
-          }
-        });
-      },
-      { threshold: 0.5 }
-    );
+    // Find first keyword match
+    let match = SCROLL_MAP.find(({ keys }) => keys.some((k) => query.includes(k)));
+    let sectionId = match ? match.id : 'unknown';
 
-    const observedElements = new Set();
-    const updateObserver = () => {
-      const elements = document.querySelectorAll('[id]');
-      elements.forEach((el) => {
-        if (dialogueMap[el.id] && !observedElements.has(el)) {
-          observer.observe(el);
-          observedElements.add(el);
+    // Typewriter response
+    typeText(setBotText, RESPONSES[sectionId] ?? RESPONSES.unknown);
+
+    // Flash effect
+    setFlash(true);
+    setTimeout(() => setFlash(false), 400);
+
+    // Scroll after a short delay so user sees response start
+    if (sectionId !== 'unknown') {
+      setTimeout(() => {
+        if (sectionId === null) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          const el = document.querySelector(sectionId);
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
-      });
-    };
-
-    updateObserver();
-
-    // Re-check DOM for new elements (e.g., loaded by router)
-    const mutationObserver = new MutationObserver(updateObserver);
-    mutationObserver.observe(document.body, { childList: true, subtree: true });
-
-    return () => {
-      observer.disconnect();
-      mutationObserver.disconnect();
-    };
-  }, [currentId]);
+      }, 450);
+    }
+  }
 
   return (
     <motion.div
-      animate={{ y: [0, -10, 0] }}
+      animate={{ y: [0, -8, 0] }}
       transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-      className="fixed bottom-6 right-6 z-[100] flex flex-col items-center cursor-pointer group"
+      style={{
+        position: 'fixed',
+        bottom: '24px',
+        right: '24px',
+        zIndex: 100,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        cursor: 'default',
+      }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Speech Bubble */}
-      <div className="w-48 bg-[#0B132B] border border-[#00f0ff] rounded-2xl p-3 mb-6 relative shadow-[0_0_10px_#00f0ff] text-sm text-[#e0e7ff] font-sans leading-relaxed min-h-[70px]">
-        {displayText}
-        {/* Tail of the bubble */}
-        <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[10px] border-r-[10px] border-t-[12px] border-transparent border-t-[#00f0ff]">
-          <div className="absolute -top-[13px] -left-[9px] w-0 h-0 border-l-[9px] border-r-[9px] border-t-[11px] border-transparent border-t-[#0B132B]"></div>
+      {/* ── Speech Bubble ── */}
+      <motion.div
+        animate={{ boxShadow: flash ? '0 0 24px #00f0ff' : '0 0 10px rgba(0,240,255,0.4)' }}
+        transition={{ duration: 0.3 }}
+        style={{
+          width: '230px',
+          background: '#0B132B',
+          border: '1px solid #00f0ff',
+          borderRadius: '16px',
+          padding: '14px',
+          marginBottom: '24px',
+          position: 'relative',
+          fontFamily: "'Inter', sans-serif",
+        }}
+      >
+        {/* Bot message */}
+        <div
+          style={{
+            fontSize: '0.8rem',
+            color: '#e0e7ff',
+            lineHeight: 1.55,
+            minHeight: '52px',
+            marginBottom: '10px',
+          }}
+        >
+          {botText}
+          <motion.span
+            animate={{ opacity: [1, 0, 1] }}
+            transition={{ repeat: Infinity, duration: 0.8 }}
+            style={{ color: '#00f0ff', fontWeight: 700 }}
+          >
+            |
+          </motion.span>
         </div>
-      </div>
 
-      {/* Robot Body Container */}
-      <div className="relative flex flex-col items-center">
+        {/* Divider */}
+        <div style={{ height: '1px', background: 'rgba(0,240,255,0.2)', marginBottom: '10px' }} />
+
+        {/* Input row */}
+        <form
+          onSubmit={handleSubmit}
+          style={{ display: 'flex', gap: '6px', alignItems: 'center' }}
+        >
+          <input
+            ref={inputRef}
+            value={userInput}
+            onChange={(e) => setUserInput(e.target.value)}
+            placeholder="e.g. 'about us'…"
+            style={{
+              flex: 1,
+              background: 'rgba(0,240,255,0.06)',
+              border: '1px solid rgba(0,240,255,0.25)',
+              borderRadius: '8px',
+              padding: '5px 8px',
+              color: '#e0e7ff',
+              fontSize: '0.75rem',
+              fontFamily: "'Inter', sans-serif",
+              outline: 'none',
+            }}
+            onFocus={(e) => (e.target.style.borderColor = '#00f0ff')}
+            onBlur={(e) => (e.target.style.borderColor = 'rgba(0,240,255,0.25)')}
+          />
+          <motion.button
+            type="submit"
+            whileHover={{ scale: 1.15, boxShadow: '0 0 12px #00f0ff' }}
+            whileTap={{ scale: 0.9 }}
+            style={{
+              background: 'rgba(0,240,255,0.15)',
+              border: '1px solid rgba(0,240,255,0.4)',
+              borderRadius: '8px',
+              color: '#00f0ff',
+              width: '28px',
+              height: '28px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              fontSize: '0.9rem',
+              flexShrink: 0,
+            }}
+          >
+            ↵
+          </motion.button>
+        </form>
+
+        {/* Bubble tail */}
+        <div
+          style={{
+            position: 'absolute',
+            bottom: '-11px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: 0,
+            height: 0,
+            borderLeft: '9px solid transparent',
+            borderRight: '9px solid transparent',
+            borderTop: '11px solid #00f0ff',
+          }}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              top: '-12px',
+              left: '-8px',
+              width: 0,
+              height: 0,
+              borderLeft: '8px solid transparent',
+              borderRight: '8px solid transparent',
+              borderTop: '10px solid #0B132B',
+            }}
+          />
+        </div>
+      </motion.div>
+
+      {/* ── Robot Body ── */}
+      <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         {/* Antenna */}
-        <div className="absolute -top-6 w-1 h-6 bg-[#3b82f6] shadow-[0_0_5px_#3b82f6] flex justify-center">
+        <div
+          style={{
+            position: 'absolute',
+            top: '-24px',
+            width: '4px',
+            height: '24px',
+            background: '#3b82f6',
+            boxShadow: '0 0 5px #3b82f6',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
           <motion.div
             animate={{ opacity: [0.5, 1, 0.5], scale: [0.8, 1.2, 0.8] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-            className="w-3 h-3 bg-[#ff6b6b] rounded-full -mt-2 shadow-[0_0_8px_#ff6b6b]"
+            style={{
+              width: '12px',
+              height: '12px',
+              background: '#ff6b6b',
+              borderRadius: '50%',
+              marginTop: '-8px',
+              boxShadow: '0 0 8px #ff6b6b',
+            }}
           />
         </div>
 
         {/* Head */}
-        <div className="w-20 h-16 bg-cyan-900/20 backdrop-blur-md rounded-2xl border border-white/20 shadow-[0_0_10px_rgba(59,130,246,0.6)] group-hover:shadow-[0_0_20px_#00f0ff] transition-all duration-300 flex flex-col items-center justify-center relative z-10">
-          {/* Eyes container */}
-          <div className="flex gap-4 mb-2">
-            <div className="w-4 h-4 rounded-full bg-[#00f0ff] shadow-[0_0_10px_#00f0ff]"></div>
-            <div className="w-4 h-4 rounded-full bg-[#00f0ff] shadow-[0_0_10px_#00f0ff]"></div>
+        <div
+          style={{
+            width: '80px',
+            height: '64px',
+            background: 'rgba(8, 47, 73, 0.5)',
+            backdropFilter: 'blur(12px)',
+            borderRadius: '16px',
+            border: '1px solid rgba(255,255,255,0.2)',
+            boxShadow: isHovered ? '0 0 20px #00f0ff' : '0 0 10px rgba(59,130,246,0.6)',
+            transition: 'box-shadow 0.3s',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'relative',
+            zIndex: 10,
+          }}
+        >
+          <div style={{ display: 'flex', gap: '16px', marginBottom: '8px' }}>
+            <div style={{ width: '16px', height: '16px', borderRadius: '50%', background: '#00f0ff', boxShadow: '0 0 10px #00f0ff' }} />
+            <div style={{ width: '16px', height: '16px', borderRadius: '50%', background: '#00f0ff', boxShadow: '0 0 10px #00f0ff' }} />
           </div>
-          {/* Mouth (Loading bar style) */}
-          <div className="w-8 h-1.5 bg-[#00f0ff] rounded-full shadow-[0_0_5px_#00f0ff] overflow-hidden">
-              <motion.div 
-                animate={{ x: ['-100%', '100%'] }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
-                className="w-4 h-full bg-white opacity-80"
-              />
+          <div style={{ width: '32px', height: '6px', background: '#00f0ff', borderRadius: '100px', boxShadow: '0 0 5px #00f0ff', overflow: 'hidden' }}>
+            <motion.div
+              animate={{ x: ['-100%', '100%'] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
+              style={{ width: '16px', height: '100%', background: 'rgba(255,255,255,0.8)' }}
+            />
           </div>
         </div>
 
-        {/* Neck connector */}
-        <div className="w-6 h-3 bg-[#3b82f6] shadow-[0_0_5px_#3b82f6] -mt-1 -mb-1 z-0"></div>
+        {/* Neck */}
+        <div style={{ width: '24px', height: '12px', background: '#3b82f6', boxShadow: '0 0 5px #3b82f6', marginTop: '-2px', marginBottom: '-2px', zIndex: 0 }} />
 
         {/* Torso */}
-        <div className="w-28 h-36 bg-cyan-900/20 backdrop-blur-md rounded-[24px] border border-white/20 shadow-[0_0_15px_rgba(59,130,246,0.5)] group-hover:shadow-[0_0_25px_#00f0ff] transition-all duration-300 flex flex-col items-center pt-3 pb-2 z-10 relative">
-          
-          {/* Main Chest Screen */}
-          <div className="w-20 h-[4.5rem] bg-[#0B132B] rounded-lg border border-[#1e3a8a] shadow-inner flex flex-col items-center py-1">
-            {/* Animated Line Chart SVG */}
-            <svg viewBox="0 0 60 25" className="w-[85%] h-8 overflow-visible mt-1">
+        <div
+          style={{
+            width: '112px',
+            height: '144px',
+            background: 'rgba(8, 47, 73, 0.5)',
+            backdropFilter: 'blur(12px)',
+            borderRadius: '24px',
+            border: '1px solid rgba(255,255,255,0.2)',
+            boxShadow: isHovered ? '0 0 25px #00f0ff' : '0 0 15px rgba(59,130,246,0.5)',
+            transition: 'box-shadow 0.3s',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            padding: '12px 0 8px',
+            zIndex: 10,
+            position: 'relative',
+          }}
+        >
+          {/* Chest screen */}
+          <div style={{ width: '80px', height: '72px', background: '#0B132B', borderRadius: '8px', border: '1px solid #1e3a8a', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '4px 0' }}>
+            <svg viewBox="0 0 60 25" style={{ width: '85%', height: '32px', overflow: 'visible', marginTop: '4px' }}>
               <motion.path
                 d="M 0 20 Q 15 20, 20 15 T 40 10 T 60 5"
-                fill="transparent"
-                stroke="#00f0ff"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+                fill="transparent" stroke="#00f0ff" strokeWidth="2"
+                strokeLinecap="round" strokeLinejoin="round"
                 style={{ filter: 'drop-shadow(0 0 2px #00f0ff)' }}
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: isHovered ? 1 : 0 }}
                 transition={{ duration: 0.8, ease: 'easeInOut' }}
               />
             </svg>
-            
-            {/* Vertical Bar Charts */}
-            <div className="flex gap-1.5 mt-auto mb-1 items-end h-4">
-              <motion.div animate={{ height: [6, 12, 6] }} transition={{ duration: 1.2, repeat: Infinity }} className="w-1.5 bg-[#00f0ff] shadow-[0_0_4px_#00f0ff] rounded-t-sm" />
-              <motion.div animate={{ height: [12, 6, 12] }} transition={{ duration: 1.5, repeat: Infinity }} className="w-1.5 bg-[#ffd700] shadow-[0_0_4px_#ffd700] rounded-t-sm" />
-              <motion.div animate={{ height: [8, 14, 8] }} transition={{ duration: 1.3, repeat: Infinity }} className="w-1.5 bg-[#00f0ff] shadow-[0_0_4px_#00f0ff] rounded-t-sm" />
+            <div style={{ display: 'flex', gap: '6px', marginTop: 'auto', marginBottom: '4px', alignItems: 'flex-end', height: '16px' }}>
+              <motion.div animate={{ height: [6, 12, 6] }} transition={{ duration: 1.2, repeat: Infinity }} style={{ width: '6px', background: '#00f0ff', boxShadow: '0 0 4px #00f0ff', borderRadius: '2px 2px 0 0' }} />
+              <motion.div animate={{ height: [12, 6, 12] }} transition={{ duration: 1.5, repeat: Infinity }} style={{ width: '6px', background: '#ffd700', boxShadow: '0 0 4px #ffd700', borderRadius: '2px 2px 0 0' }} />
+              <motion.div animate={{ height: [8, 14, 8] }} transition={{ duration: 1.3, repeat: Infinity }} style={{ width: '6px', background: '#00f0ff', boxShadow: '0 0 4px #00f0ff', borderRadius: '2px 2px 0 0' }} />
             </div>
           </div>
 
-          {/* Lower Panel */}
-          <div className="mt-auto w-[80%] flex flex-col gap-2">
-            {/* Indicator lights */}
-            <div className="flex justify-between px-1">
-              <div className="flex gap-1.5">
-                <div className="w-2 h-1 bg-[#ff6b6b] rounded-full shadow-[0_0_4px_#ff6b6b]"></div>
-                <div className="w-2 h-1 bg-[#ffd700] rounded-full shadow-[0_0_4px_#ffd700]"></div>
+          {/* Lower panel */}
+          <div style={{ marginTop: 'auto', width: '80%', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0 4px' }}>
+              <div style={{ display: 'flex', gap: '6px' }}>
+                <div style={{ width: '8px', height: '4px', background: '#ff6b6b', borderRadius: '100px', boxShadow: '0 0 4px #ff6b6b' }} />
+                <div style={{ width: '8px', height: '4px', background: '#ffd700', borderRadius: '100px', boxShadow: '0 0 4px #ffd700' }} />
               </div>
-              <div className="w-2 h-1 bg-[#00f0ff] rounded-full shadow-[0_0_4px_#00f0ff]"></div>
+              <div style={{ width: '8px', height: '4px', background: '#00f0ff', borderRadius: '100px', boxShadow: '0 0 4px #00f0ff' }} />
             </div>
-            
-            {/* Digital Readout */}
-            <div className="bg-[#0B132B] text-[#00f0ff] font-mono text-[8px] leading-tight px-1 py-0.5 rounded border border-[#1e3a8a] text-center shadow-[0_0_3px_#00f0ff_inset]">
+            <div style={{ background: '#0B132B', color: '#00f0ff', fontFamily: 'monospace', fontSize: '8px', padding: '2px 4px', borderRadius: '4px', border: '1px solid #1e3a8a', textAlign: 'center', boxShadow: 'inset 0 0 3px #00f0ff' }}>
               01001010
             </div>
           </div>
-
         </div>
 
-        {/* Arms */}
-        {/* Left Arm */}
-        <div className="absolute top-8 -left-4 w-6 h-14 bg-cyan-900/20 backdrop-blur-md rounded-full border border-white/20 shadow-[0_0_10px_rgba(59,130,246,0.5)] -z-10 origin-top transform rotate-12 group-hover:rotate-45 transition-transform duration-300"></div>
-        {/* Right Arm */}
-        <div className="absolute top-8 -right-4 w-6 h-14 bg-cyan-900/20 backdrop-blur-md rounded-full border border-white/20 shadow-[0_0_10px_rgba(59,130,246,0.5)] -z-10 origin-top transform -rotate-12 group-hover:-rotate-45 transition-transform duration-300"></div>
+        {/* Left arm */}
+        <div
+          style={{
+            position: 'absolute', top: '32px', left: '-16px',
+            width: '24px', height: '56px',
+            background: 'rgba(8, 47, 73, 0.5)', backdropFilter: 'blur(12px)',
+            borderRadius: '100px', border: '1px solid rgba(255,255,255,0.2)',
+            boxShadow: '0 0 10px rgba(59,130,246,0.5)',
+            zIndex: -1,
+            transform: isHovered ? 'rotate(45deg)' : 'rotate(12deg)',
+            transformOrigin: 'top center',
+            transition: 'transform 0.3s',
+          }}
+        />
+        {/* Right arm */}
+        <div
+          style={{
+            position: 'absolute', top: '32px', right: '-16px',
+            width: '24px', height: '56px',
+            background: 'rgba(8, 47, 73, 0.5)', backdropFilter: 'blur(12px)',
+            borderRadius: '100px', border: '1px solid rgba(255,255,255,0.2)',
+            boxShadow: '0 0 10px rgba(59,130,246,0.5)',
+            zIndex: -1,
+            transform: isHovered ? 'rotate(-45deg)' : 'rotate(-12deg)',
+            transformOrigin: 'top center',
+            transition: 'transform 0.3s',
+          }}
+        />
 
         {/* Legs */}
-        <div className="flex gap-4 -mt-2 -z-10">
-          <div className="w-5 h-10 bg-cyan-900/20 backdrop-blur-md rounded-full border border-white/20 shadow-[0_0_10px_rgba(59,130,246,0.5)]"></div>
-          <div className="w-5 h-10 bg-cyan-900/20 backdrop-blur-md rounded-full border border-white/20 shadow-[0_0_10px_rgba(59,130,246,0.5)]"></div>
+        <div style={{ display: 'flex', gap: '16px', marginTop: '-8px', zIndex: -1 }}>
+          <div style={{ width: '20px', height: '40px', background: 'rgba(8, 47, 73, 0.5)', backdropFilter: 'blur(12px)', borderRadius: '100px', border: '1px solid rgba(255,255,255,0.2)', boxShadow: '0 0 10px rgba(59,130,246,0.5)' }} />
+          <div style={{ width: '20px', height: '40px', background: 'rgba(8, 47, 73, 0.5)', backdropFilter: 'blur(12px)', borderRadius: '100px', border: '1px solid rgba(255,255,255,0.2)', boxShadow: '0 0 10px rgba(59,130,246,0.5)' }} />
         </div>
-
       </div>
     </motion.div>
   );

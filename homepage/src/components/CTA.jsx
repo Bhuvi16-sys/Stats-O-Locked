@@ -106,28 +106,35 @@ export default function CTA() {
 
           {/* CTA */}
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <motion.a
-              href="../contact.html"
+            <motion.button
+              onClick={() => {
+                const el = document.getElementById('cta');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}
               className="btn-neon btn-neon-primary"
               whileHover={{ scale: 1.07 }}
               whileTap={{ scale: 0.97 }}
               style={{
-                textDecoration: 'none',
+                cursor: 'pointer',
+                border: 'none',
                 padding: '14px 40px',
                 fontSize: '1rem',
               }}
             >
               Join Now <ArrowRight size={18} />
-            </motion.a>
-            <motion.a
-              href="../events.html"
+            </motion.button>
+            <motion.button
+              onClick={() => {
+                const el = document.getElementById('events');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}
               className="btn-neon btn-neon-secondary"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
-              style={{ textDecoration: 'none', padding: '14px 32px', fontSize: '1rem' }}
+              style={{ cursor: 'pointer', border: 'none', padding: '14px 32px', fontSize: '1rem' }}
             >
               See Events
-            </motion.a>
+            </motion.button>
           </div>
 
           {/* Social proof badges */}
