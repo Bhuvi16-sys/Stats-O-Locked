@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import PageLayout from '../components/PageLayout';
+import { Calendar, Trophy, ArrowRight, Star } from 'lucide-react';
 
 // ─────────────────────────────────────────────
 // DATA

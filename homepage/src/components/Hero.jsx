@@ -11,7 +11,7 @@ function StarField() {
   const positions = useMemo(() => {
     const arr = new Float32Array(1200 * 3);
     for (let i = 0; i < arr.length; i += 3) {
-      arr[i]     = (Math.random() - 0.5) * 40;
+      arr[i] = (Math.random() - 0.5) * 40;
       arr[i + 1] = (Math.random() - 0.5) * 40;
       arr[i + 2] = (Math.random() - 0.5) * 40 - 10; // push behind
     }
@@ -47,9 +47,9 @@ function ParticleHalo() {
       const u = Math.random();
       const v = Math.random();
       const theta = u * 2.0 * Math.PI;
-      const phi   = Math.acos(2.0 * v - 1.0);
-      const r     = 2.9 + Math.random() * 1.2;
-      arr[i]     = r * Math.sin(phi) * Math.cos(theta);
+      const phi = Math.acos(2.0 * v - 1.0);
+      const r = 2.9 + Math.random() * 1.2;
+      arr[i] = r * Math.sin(phi) * Math.cos(theta);
       arr[i + 1] = r * Math.sin(phi) * Math.sin(theta);
       arr[i + 2] = r * Math.cos(phi);
     }
@@ -81,7 +81,7 @@ function ParticleHalo() {
 
 /* ── 3. The big translucent globe + sweeping rings ────────────── */
 function Globe() {
-  const meshRef  = useRef();
+  const meshRef = useRef();
   const ring1Ref = useRef();
   const ring2Ref = useRef();
   const ring3Ref = useRef();
@@ -98,11 +98,11 @@ function Globe() {
     }
     if (ring2Ref.current) {
       ring2Ref.current.rotation.y = -t * 0.09;
-      ring2Ref.current.rotation.z =  t * 0.05;
+      ring2Ref.current.rotation.z = t * 0.05;
     }
     if (ring3Ref.current) {
       ring3Ref.current.rotation.x = -t * 0.06;
-      ring3Ref.current.rotation.z =  t * 0.08;
+      ring3Ref.current.rotation.z = t * 0.08;
     }
   });
 

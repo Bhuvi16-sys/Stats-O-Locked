@@ -5,21 +5,21 @@ import { Menu, X } from 'lucide-react';
 
 // Sections in scroll order — each maps to a section id on the home page
 const sections = [
-  { id: 'hero',     label: 'HOME' },
+  { id: 'hero', label: 'HOME' },
   { id: 'about-us', label: 'ABOUT US' },
-  { id: 'domains',  label: 'DOMAINS' },
-  { id: 'events',   label: 'EVENTS' },
-  { id: 'team',     label: 'COMMUNITY' },
-  { id: 'cta',      label: 'CONTACT US' },
+  { id: 'domains', label: 'DOMAINS' },
+  { id: 'events', label: 'EVENTS' },
+  { id: 'team', label: 'COMMUNITY' },
+  { id: 'cta', label: 'CONTACT US' },
 ];
 
 export default function Navbar() {
-  const [scrolled, setScrolled]       = useState(false);
-  const [mobileOpen, setMobileOpen]   = useState(false);
-  const [activeId, setActiveId]       = useState('hero');
-  const navigate   = useNavigate();
-  const location   = useLocation();
-  const isHome     = location.pathname === '/';
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [activeId, setActiveId] = useState('hero');
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isHome = location.pathname === '/';
 
   /* ── Scroll-spy ── */
   useEffect(() => {

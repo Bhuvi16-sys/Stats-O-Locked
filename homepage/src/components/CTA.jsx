@@ -156,7 +156,7 @@ export default function CTA() {
             {[
               { platform: 'Instagram', handle: '@sol_vitb', color: '#e1306c' },
               { platform: 'LinkedIn', handle: 'Stats-O-Locked Club', color: '#0077b5' },
-              { platform: 'Email', handle: 'sol@vitbhopal.ac.in', color: '#00f0ff' },
+              { platform: 'Email', handle: 'solclub@vitbhopal.ac.in', color: '#00f0ff' },
             ].map((s) => (
               <div key={s.platform} style={{ textAlign: 'center' }}>
                 <div style={{

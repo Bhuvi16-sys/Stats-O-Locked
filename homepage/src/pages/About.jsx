@@ -4,6 +4,7 @@ import { Eye, Target } from 'lucide-react';
 
 export default function About() {
   const objectives = [
+  const objectives = [
     {
       num: "01",
       color: "#00f0ff",
@@ -91,7 +92,7 @@ export default function About() {
           <div className="flex flex-col gap-6 relative pl-2 md:pl-6">
             {/* Vertical connector line */}
             <div className="absolute left-[17px] md:left-[29px] top-6 bottom-6 w-0.5 bg-gradient-to-b from-[#00f0ff] via-[#7c3aed] to-[#3b82f6] opacity-20" />
-            
+
             {objectives.map((obj, index) => (
               <motion.div
                 key={index}
@@ -113,7 +114,7 @@ export default function About() {
                 >
                   {obj.num}
                 </div>
-                
+
                 {/* Content Box */}
                 <div className="flex-1 p-4 md:p-5 rounded-xl bg-white/[0.01] border border-white/5 hover:border-white/10 hover:bg-white/[0.02] transition-all duration-300">
                   <p className="text-gray-300 text-base md:text-lg font-light leading-relaxed">

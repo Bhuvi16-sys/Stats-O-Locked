@@ -16,16 +16,16 @@ const SCROLL_MAP = [
 ];
 
 const RESPONSES = {
-  '#about-us':      "📖 Scrolling to About Us — let me tell you our story!",
-  '#events':        "🗓️ Heading to Events — don't miss our workshops!",
-  '#domains':       "🔬 Taking you to Our Core Domains section!",
-  '#features':      "⚡ Let me show you why you should join SOL!",
-  '#stats':         "📊 Check out our impact statistics!",
-  '#team':          "👥 Meet the brilliant minds of Stats-O-Locked!",
-  '#testimonials':  "💬 See what our members are saying!",
-  '#contact':       "📬 Heading to Contact Us!",
-  null:             "🏠 Back to the top!",
-  unknown:          "🤔 Try: 'about us', 'events', 'team', 'contact'…",
+  '#about-us': "📖 Scrolling to About Us — let me tell you our story!",
+  '#events': "🗓️ Heading to Events — don't miss our workshops!",
+  '#domains': "🔬 Taking you to Our Core Domains section!",
+  '#features': "⚡ Let me show you why you should join SOL!",
+  '#stats': "📊 Check out our impact statistics!",
+  '#team': "👥 Meet the brilliant minds of Stats-O-Locked!",
+  '#testimonials': "💬 See what our members are saying!",
+  '#contact': "📬 Heading to Contact Us!",
+  null: "🏠 Back to the top!",
+  unknown: "🤔 Try: 'about us', 'events', 'team', 'contact'…",
 };
 
 function typeText(setText, text) {
@@ -41,10 +41,10 @@ function typeText(setText, text) {
 
 /* ── Component ──────────────────────────────────────────────── */
 export default function RobotAssistant() {
-  const [botText, setBotText]     = useState("👋 Hey! I'm Statsy. Type a section name to navigate!");
+  const [botText, setBotText] = useState("👋 Hey! I'm Statsy. Type a section name to navigate!");
   const [userInput, setUserInput] = useState('');
   const [isHovered, setIsHovered] = useState(false);
-  const [flash, setFlash]         = useState(false);
+  const [flash, setFlash] = useState(false);
   const inputRef = useRef(null);
 
   function handleSubmit(e) {
@@ -92,7 +92,7 @@ export default function RobotAssistant() {
         cursor: 'default',
       }}
       onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseLeave={() => { setIsHovered(false); setShowActions(false); }}
     >
       {/* ── Speech Bubble ── */}
       <motion.div
@@ -296,6 +296,8 @@ export default function RobotAssistant() {
             <svg viewBox="0 0 60 25" style={{ width: '85%', height: '32px', overflow: 'visible', marginTop: '4px' }}>
               <motion.path
                 d="M 0 20 Q 15 20, 20 15 T 40 10 T 60 5"
+                fill="transparent" stroke="#00f0ff" strokeWidth="2"
+                strokeLinecap="round" strokeLinejoin="round"
                 fill="transparent" stroke="#00f0ff" strokeWidth="2"
                 strokeLinecap="round" strokeLinejoin="round"
                 style={{ filter: 'drop-shadow(0 0 2px #00f0ff)' }}

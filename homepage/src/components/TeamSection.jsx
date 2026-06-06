@@ -19,22 +19,26 @@ import { containerVariants, cardVariants } from './SectionCard';
 const leadershipTeam = [
   {
     name: 'Shivam Waghule',
+    name: 'Shivam Waghule',
     role: 'President',
     department: 'Stats-O-Locked Leadership',
     avatar: null,
     accent: '#00f0ff',
+    category: 'Leadership',
     socials: {
-      github: 'https://github.com',
-      linkedin: 'https://linkedin.com',
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
       twitter: null,
     },
   },
   {
     name: 'Shagun Gupta',
+    name: 'Shagun Gupta',
     role: 'Vice President',
     department: 'Stats-O-Locked Leadership',
     avatar: null,
     accent: '#7c3aed',
+    category: 'Leadership',
     socials: {
       github: 'https://github.com',
       linkedin: 'https://linkedin.com',
@@ -47,9 +51,10 @@ const leadershipTeam = [
     department: 'Stats-O-Locked Leadership',
     avatar: null,
     accent: '#3b82f6',
+    category: 'Leadership',
     socials: {
-      github: 'https://github.com',
-      linkedin: 'https://linkedin.com',
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
       twitter: null,
     },
   },
@@ -59,6 +64,35 @@ const leadershipTeam = [
     department: 'Stats-O-Locked Leadership',
     avatar: null,
     accent: '#10b981',
+    category: 'Leadership',
+    socials: {
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
+      twitter: null,
+    },
+  },
+
+  // Department Leads & Co-Leads
+  {
+    name: 'Bhuvi Jain',
+    role: 'Technical Lead',
+    department: 'Technical',
+    avatar: null,
+    accent: '#00f0ff',
+    category: 'Department Leads',
+    socials: {
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Ankit',
+    role: 'Technical Co-Lead',
+    department: 'Technical',
+    avatar: null,
+    accent: '#7c3aed',
+    category: 'Department Leads',
     socials: {
       github: 'https://github.com',
       linkedin: 'https://linkedin.com',
@@ -98,6 +132,20 @@ const departmentLeads = [
     department: 'Events Department',
     avatar: null,
     accent: '#f59e0b',
+    category: 'Department Leads',
+    socials: {
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Sampada Seth',
+    role: 'Event Management Co-Lead',
+    department: 'Event Management',
+    avatar: null,
+    accent: '#10b981',
+    category: 'Department Leads',
     socials: {
       github: 'https://github.com',
       linkedin: 'https://linkedin.com',
@@ -110,9 +158,49 @@ const departmentLeads = [
     department: 'Events Department',
     avatar: null,
     accent: '#818cf8',
+    category: 'Department Leads',
     socials: {
-      github: 'https://github.com',
-      linkedin: 'https://linkedin.com',
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Payal Beura',
+    role: 'Creative Lead',
+    department: 'Creative',
+    avatar: null,
+    accent: '#ff4d94',
+    category: 'Department Leads',
+    socials: {
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Shubhankar',
+    role: 'Creative Co-Lead',
+    department: 'Creative',
+    avatar: null,
+    accent: '#f59e0b',
+    category: 'Department Leads',
+    socials: {
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Shivanya Tomar',
+    role: 'Research Lead',
+    department: 'Research',
+    avatar: null,
+    accent: '#3b82f6',
+    category: 'Department Leads',
+    socials: {
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
       twitter: null,
     },
   },
@@ -182,9 +270,23 @@ const departmentLeads = [
     department: 'Photography Department',
     avatar: null,
     accent: '#00f0ff',
+    category: 'Department Leads',
     socials: {
-      github: 'https://github.com',
-      linkedin: 'https://linkedin.com',
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Hamza',
+    role: 'Social Media Lead',
+    department: 'Social Media',
+    avatar: null,
+    accent: '#e1306c',
+    category: 'Department Leads',
+    socials: {
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
       twitter: null,
     },
   },
@@ -194,6 +296,33 @@ const departmentLeads = [
     department: 'PR & Outreach Department',
     avatar: null,
     accent: '#7c3aed',
+    category: 'Department Leads',
+    socials: {
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Sankalp',
+    role: 'PR & Outreach Lead',
+    department: 'PR & Outreach',
+    avatar: null,
+    accent: '#f59e0b',
+    category: 'Department Leads',
+    socials: {
+      github: null,
+      linkedin: 'https://www.linkedin.com/company/stats-o-locked-club/',
+      twitter: null,
+    },
+  },
+  {
+    name: 'Raksha',
+    role: 'PR & Outreach Co-Lead',
+    department: 'PR & Outreach',
+    avatar: null,
+    accent: '#10b981',
+    category: 'Department Leads',
     socials: {
       github: 'https://github.com',
       linkedin: 'https://linkedin.com',
@@ -460,6 +589,9 @@ function TeamCard({ member }) {
 
 /* ─── Main export ─────────────────────────────────────────── */
 export default function TeamSection() {
+  const leadership = teamMembers.filter((m) => m.category === 'Leadership');
+  const departmentLeads = teamMembers.filter((m) => m.category === 'Department Leads');
+
   return (
     <section
       id="team"

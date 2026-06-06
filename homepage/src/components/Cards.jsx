@@ -1,3 +1,4 @@
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Lightbulb, Compass, Terminal, Users } from 'lucide-react';
 import { useMemo, useState, useEffect } from 'react';
@@ -68,8 +69,8 @@ function DotGlobe() {
 
   // Orbital particles (3 dots orbiting at different radii & speeds)
   const orbitals = [
-    { r: 148, duration: 6,  startAngle: 0,   color: '#00f0ff', size: 3 },
-    { r: 158, duration: 9,  startAngle: 120, color: '#7c3aed', size: 2.5 },
+    { r: 148, duration: 6, startAngle: 0, color: '#00f0ff', size: 3 },
+    { r: 158, duration: 9, startAngle: 120, color: '#7c3aed', size: 2.5 },
     { r: 142, duration: 13, startAngle: 240, color: '#3b82f6', size: 2 },
   ];
 
@@ -84,12 +85,12 @@ function DotGlobe() {
       <svg width="320" height="320" viewBox="0 0 320 320" style={{ overflow: 'visible' }}>
         <defs>
           <radialGradient id="sol-globeGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"  stopColor="rgba(124,58,237,0.22)" />
+            <stop offset="0%" stopColor="rgba(124,58,237,0.22)" />
             <stop offset="55%" stopColor="rgba(59,130,246,0.07)" />
             <stop offset="100%" stopColor="transparent" />
           </radialGradient>
           <radialGradient id="sol-globeShine" cx="35%" cy="30%" r="55%">
-            <stop offset="0%"  stopColor="rgba(255,255,255,0.06)" />
+            <stop offset="0%" stopColor="rgba(255,255,255,0.06)" />
             <stop offset="100%" stopColor="transparent" />
           </radialGradient>
           <clipPath id="sol-globeClip">
