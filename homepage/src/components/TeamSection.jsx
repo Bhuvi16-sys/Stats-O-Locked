@@ -589,9 +589,6 @@ function TeamCard({ member }) {
 
 /* ─── Main export ─────────────────────────────────────────── */
 export default function TeamSection() {
-  const leadership = teamMembers.filter((m) => m.category === 'Leadership');
-  const departmentLeads = teamMembers.filter((m) => m.category === 'Department Leads');
-
   return (
     <section
       id="team"
@@ -669,8 +666,8 @@ export default function TeamSection() {
               margin: '0 auto',
             }}
           >
-            {leadershipTeam.map((member) => (
-              <TeamCard key={member.name} member={member} />
+            {leadershipTeam.map((member, index) => (
+              <TeamCard key={`${member.name}-${member.department}-${index}`} member={member} />
             ))}
           </motion.div>
         </div>
@@ -703,8 +700,8 @@ export default function TeamSection() {
               gap: '24px',
             }}
           >
-            {departmentLeads.map((member) => (
-              <TeamCard key={member.name} member={member} />
+            {departmentLeads.map((member, index) => (
+              <TeamCard key={`${member.name}-${member.department}-${index}`} member={member} />
             ))}
           </motion.div>
         </div>

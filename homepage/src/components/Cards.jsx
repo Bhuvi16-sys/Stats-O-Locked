@@ -1,7 +1,6 @@
-import { useState, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Lightbulb, Compass, Terminal, Users } from 'lucide-react';
-import { useMemo, useState, useEffect } from 'react';
 
 const cards = [
   {

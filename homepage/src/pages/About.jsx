@@ -4,7 +4,6 @@ import { Eye, Target } from 'lucide-react';
 
 export default function About() {
   const objectives = [
-  const objectives = [
     {
       num: "01",
       color: "#00f0ff",

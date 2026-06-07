@@ -92,7 +92,7 @@ export default function RobotAssistant() {
         cursor: 'default',
       }}
       onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => { setIsHovered(false); setShowActions(false); }}
+      onMouseLeave={() => setIsHovered(false)}
     >
       {/* ── Speech Bubble ── */}
       <motion.div
