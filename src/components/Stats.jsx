@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Users, Briefcase, Trophy, BookOpen } from 'lucide-react';
+import { Users, FileText, Calendar, GraduationCap } from 'lucide-react';
 
 const stats = [
-  { icon: Users, label: 'Members', value: 200, suffix: '+', color: '#00f0ff' },
-  { icon: Briefcase, label: 'Projects', value: 30, suffix: '+', color: '#7c3aed' },
-  { icon: Trophy, label: 'Hackathons', value: 12, suffix: '+', color: '#3b82f6' },
-  { icon: BookOpen, label: 'Workshops', value: 25, suffix: '+', color: '#818cf8' },
+  { icon: Users,          label: 'Members',         value: 70, suffix: '+', color: '#00f0ff' },
+  { icon: FileText,       label: 'Research Papers',  value: 5,  suffix: '',  color: '#7c3aed' },
+  { icon: Calendar,       label: 'Events',           value: 3,  suffix: '',  color: '#3b82f6' },
+  { icon: GraduationCap,  label: 'Workshops',        value: 1,  suffix: '',  color: '#818cf8' },
 ];
 
 function Counter({ value, suffix, color, inView }) {
@@ -128,7 +128,7 @@ export default function Stats() {
         {/* Stats grid */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(220px, 100%), 1fr))',
           gap: '24px',
         }}>
           {stats.map((stat, i) => {
@@ -146,7 +146,7 @@ export default function Stats() {
                   backdropFilter: 'blur(12px)',
                   border: '1px solid rgba(255,255,255,0.07)',
                   borderRadius: '20px',
-                  padding: '40px 32px',
+                  padding: 'clamp(24px,4vw,40px) clamp(16px,3vw,32px)',
                   textAlign: 'center',
                   position: 'relative',
                   overflow: 'hidden',

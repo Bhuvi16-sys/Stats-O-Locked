@@ -132,7 +132,7 @@ export default function Features() {
           viewport={{ once: true, margin: '-50px' }}
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(300px, 100%), 1fr))',
             gap: '24px',
           }}
         >
@@ -165,7 +165,7 @@ export default function Features() {
           }}
         >
           <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.9rem' }}>
-            200+ members already unlocking their potential
+            70+ members already unlocking their potential
           </span>
           <motion.a
             href="#contact"

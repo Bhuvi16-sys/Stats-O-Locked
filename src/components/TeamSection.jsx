@@ -65,12 +65,7 @@ const departments = [
     name: 'Social Media', icon: '📱', accent: '#e1306c',
     members: [
       { name: 'Mohammad Hamza',   role: 'Social Media Lead',        avatar: '/pics/team/mohammad-hamza.webp',   accent: '#e1306c', linkedin: 'https://www.linkedin.com/in/mohammad-hamza-ba051a316/', bio: "The voice of Stats-O-Locked online. Manages all social channels with compelling content strategy, growing the club's digital footprint and keeping the community engaged." },
-    ],
-  },
-  {
-    name: 'Photography', icon: '📷', accent: '#00f0ff',
-    members: [
-      { name: 'Rajnarayan Pawar', role: 'Photography Lead',         avatar: null,                               accent: '#00f0ff', linkedin: SOL_LI, bio: 'Visual chronicler of every club moment. Captures the energy, emotion, and milestones of Stats-O-Locked events through compelling photography.' },
+      { name: 'Shamique Khan',    role: 'Social Media Co-Lead',     avatar: '/pics/team/shamique-khan.webp',    accent: '#c13584', linkedin: 'https://www.linkedin.com/in/shamique-khan/', bio: 'Co-leads the social media wing with a sharp eye for engaging content and digital trends. Helps craft and amplify Stats-O-Locked\'s online presence across all platforms.' },
     ],
   },
   {

@@ -1,51 +1,50 @@
-import { useState, useEffect, useRef, lazy, Suspense } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { HashRouter, Routes, Route, useLocation } from 'react-router-dom';
 
-import Navbar        from './components/Navbar';
-import Footer        from './components/Footer';
-import CursorGlow    from './components/CursorGlow';
-import AmbientGlow   from './components/AmbientGlow';
+import Navbar         from './components/Navbar';
+import Footer         from './components/Footer';
+import CursorGlow     from './components/CursorGlow';
+import AmbientGlow    from './components/AmbientGlow';
 import RobotAssistant from './components/RobotAssistant';
 
-const Home        = lazy(() => import('./pages/Home'));
-const About       = lazy(() => import('./pages/About'));
-const Events      = lazy(() => import('./pages/Events'));
-const Team        = lazy(() => import('./pages/Team'));
-const Research    = lazy(() => import('./pages/Research'));
-const Contact     = lazy(() => import('./pages/Contact'));
-const EventDetails= lazy(() => import('./pages/EventDetails'));
-const Leaderboard = lazy(() => import('./pages/Leaderboard'));
-const Gallery     = lazy(() => import('./pages/Gallery'));
+/* Static imports — available instantly, no Suspense blank flash */
+import About        from './pages/About';
+import Events       from './pages/Events';
+import Team         from './pages/Team';
+import Research     from './pages/Research';
+import Contact      from './pages/Contact';
+import EventDetails from './pages/EventDetails';
+import Leaderboard  from './pages/Leaderboard';
+import Gallery      from './pages/Gallery';
 
-/* ── Scroll-to-top on route change ──────────────────────────── */
+/* Home stays lazy — it pulls in Three.js (~2 MB), keep it in its own chunk */
+const Home = lazy(() => import('./pages/Home'));
+
+/* Only prefetch Home's chunk during the intro (everything else is already bundled) */
+function prefetchAll() {
+  return import('./pages/Home');
+}
+
 function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); }, [pathname]);
   return null;
 }
 
-/* ── Page transition ─────────────────────────────────────────── */
-const pageVariants = {
-  initial: { opacity: 0, y: 16 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
-  exit:    { opacity: 0, y: -8, transition: { duration: 0.25, ease: 'easeIn' } },
-};
-
 function AnimatedRoutes() {
   const location = useLocation();
   return (
-    <AnimatePresence mode="wait" initial={false}>
+    <AnimatePresence mode="sync" initial={false}>
       <motion.div
         key={location.pathname}
-        variants={pageVariants}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        style={{ position: 'relative' }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1, transition: { duration: 0.18, ease: 'easeOut' } }}
+        exit={{ opacity: 0, transition: { duration: 0.12, ease: 'easeIn' } }}
+        style={{ position: 'relative', minHeight: '60vh' }}
       >
         <ScrollToTop />
-        <Suspense fallback={<PageLoader />}>
+        <Suspense fallback={<div style={{ minHeight: '100vh', background: '#020b16' }} />}>
           <Routes location={location}>
             <Route path="/"              element={<Home />} />
             <Route path="/about"         element={<About />} />
@@ -63,329 +62,268 @@ function AnimatedRoutes() {
   );
 }
 
-function PageLoader() {
-  return (
-    <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <motion.div
-        animate={{ opacity: [0.3, 1, 0.3] }}
-        transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
-        style={{ color: '#00f0ff', fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.8rem', letterSpacing: '4px' }}
-      >
-        LOADING...
-      </motion.div>
-    </div>
-  );
-}
+/* ─────────────────────────────────────────────────────────────────
+   INTRO OVERLAY
+   Rules:
+   • All continuous motion = pure CSS @keyframes (compositor thread)
+   • Framer Motion = one-shot entry / exit only
+   • Background mirrors the website ambient glows → seamless fade
+   • The site is NOT mounted while the intro is visible, so Three.js
+     has zero GPU competition.
+   • onDone fires only after BOTH the minimum animation time
+     AND every page chunk have finished loading.
+───────────────────────────────────────────────────────────────── */
 
-/* ── Deterministic particles (no Math.random in render) ──────── */
-const PARTICLES = Array.from({ length: 12 }, (_, i) => {
-  const angle = (i / 12) * Math.PI * 2;
-  const dist  = 70 + (i % 4) * 22;
-  const colors = ['#00f0ff', '#7c3aed', '#ffd700', '#10b981'];
-  return {
-    x: Math.cos(angle) * dist,
-    y: Math.sin(angle) * dist,
-    color: colors[i % colors.length],
-    size: 3 + (i % 3),
-    delay: i * 0.038,
-  };
-});
+const INTRO_CSS = `
+  @keyframes sol-cw  { to { transform: rotate( 360deg) } }
+  @keyframes sol-ccw { to { transform: rotate(-360deg) } }
+  @keyframes sol-pulse {
+    0%,100% { box-shadow: 0 0 0 2px rgba(0,240,255,0.28), 0 0 22px rgba(0,240,255,0.12); }
+    50%     { box-shadow: 0 0 0 2px rgba(0,240,255,0.60), 0 0 40px rgba(0,240,255,0.30); }
+  }
+`;
 
-const TEXT_LETTERS = 'STATS O LOCKED'.split('');
+const MIN_INTRO_MS = 2200; /* minimum visible time even on fast connections */
 
-/* ── Intro overlay ───────────────────────────────────────────── */
 function IntroOverlay({ onDone }) {
   const [phase, setPhase] = useState(0);
-  const [logoFinalX, setLogoFinalX] = useState(null);
-  const placeholderRef = useRef(null);
 
-  /* Measure where the brand-row placeholder sits so the logo rolls
-     to exactly that position, aligning logo with the text row.    */
   useEffect(() => {
-    const measure = () => {
-      if (!placeholderRef.current) return;
-      const rect = placeholderRef.current.getBoundingClientRect();
-      setLogoFinalX(rect.left + rect.width / 2 - window.innerWidth / 2);
-    };
-    measure();
-    const t = setTimeout(measure, 120); // re-measure after fonts load
-    return () => clearTimeout(t);
-  }, []);
+    /* Animation phases */
+    const t1 = setTimeout(() => setPhase(1), 80);  /* orbital system + logo  */
+    const t2 = setTimeout(() => setPhase(2), 860); /* club name + subtitle   */
 
-  /* Phase timeline */
-  useEffect(() => {
-    const ts = [
-      setTimeout(() => setPhase(1), 80),   // crosshairs + rings + grid flash
-      setTimeout(() => setPhase(2), 540),  // logo materialises
-      setTimeout(() => setPhase(3), 1300), // logo slides right
-      setTimeout(() => setPhase(4), 1880), // logo rolls left, text reveals
-      setTimeout(() => setPhase(5), 3100), // settled — brief glow pulse
-      setTimeout(onDone, 3650),            // exit begins
-    ];
-    return () => ts.forEach(clearTimeout);
+    /* Exit only when BOTH the minimum animation time and every page chunk
+       have finished loading. On a fast connection this fires right at
+       MIN_INTRO_MS; on a slow one it waits a bit longer — no spinner. */
+    const minDone    = new Promise(r => setTimeout(r, MIN_INTRO_MS));
+    const allChunks  = prefetchAll();
+
+    Promise.all([minDone, allChunks]).then(() => {
+      /* Brief hold so the user sees the loaded state, then exit */
+      setTimeout(onDone, 380);
+    });
+
+    return () => { clearTimeout(t1); clearTimeout(t2); };
   }, [onDone]);
-
-  const LOGO_SIZE  = 96;
-  const finalX     = logoFinalX ?? -Math.round(window.innerWidth * 0.18);
-
-  /* Logo x: center → right → final(left) */
-  const logoX      = phase >= 4 ? finalX : phase >= 3 ? 280 : 0;
-
-  /* Logo rotation: small clockwise going right, rolls counter-clockwise coming back.
-     Rolling distance ≈ 280 - finalX px; rotation = dist / radius in radians → degrees */
-  const rollDist   = 280 - finalX;
-  const rollDeg    = (rollDist / (LOGO_SIZE / 2)) * (180 / Math.PI);
-  const logoRotate = phase >= 4 ? (40 - rollDeg) : phase >= 3 ? 40 : 0;
-
-  /* Per-phase logo transition curves */
-  const logoTrans  = phase >= 4
-    ? { x: { duration: 1.05, ease: [0.4, 0, 0.15, 1] }, rotate: { duration: 1.05, ease: [0.4, 0, 0.15, 1] } }
-    : phase >= 3
-      ? { x: { duration: 0.52, ease: [0.55, 0, 1, 1] }, rotate: { duration: 0.52, ease: [0.55, 0, 1, 1] } }
-      : { opacity: { duration: 0.55 }, scale: { duration: 0.62, type: 'spring', stiffness: 320, damping: 22 }, filter: { duration: 0.55 } };
 
   return (
     <motion.div
-      /* Curtain slides upward — website is already loaded underneath */
-      exit={{ y: '-100%', transition: { duration: 0.78, ease: [0.76, 0, 0.24, 1] } }}
+      exit={{ opacity: 0, transition: { duration: 0.55, ease: 'easeIn' } }}
       style={{
-        position: 'fixed', inset: 0,
-        background: '#020b16',
-        zIndex: 99999,
+        position: 'fixed', inset: 0, zIndex: 99999,
         overflow: 'hidden',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center',
+        background: [
+          'radial-gradient(ellipse 55% 55% at -5%  -5%,  rgba(0,240,255,0.18)  0%, transparent 60%)',
+          'radial-gradient(ellipse 55% 55% at 105% 105%, rgba(124,58,237,0.20) 0%, transparent 60%)',
+          'radial-gradient(ellipse 40% 40% at 88%   8%,  rgba(59,130,246,0.14) 0%, transparent 50%)',
+          '#020b16',
+        ].join(','),
       }}
     >
+      <style>{INTRO_CSS}</style>
 
-      {/* ── Scanline texture ──────────────────────────────────── */}
+      {/* Static grid */}
       <div style={{
-        position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0,
-        background: 'repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,240,255,0.009) 2px,rgba(0,240,255,0.009) 4px)',
+        position: 'absolute', inset: 0, pointerEvents: 'none',
+        backgroundImage:
+          'linear-gradient(rgba(0,240,255,0.028) 1px,transparent 1px),' +
+          'linear-gradient(90deg,rgba(0,240,255,0.028) 1px,transparent 1px)',
+        backgroundSize: '60px 60px',
       }} />
 
-      {/* ── Power-on flash ────────────────────────────────────── */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: [0, 0.18, 0] }}
-        transition={{ duration: 0.35, ease: 'easeInOut' }}
-        style={{ position: 'absolute', inset: 0, background: '#00f0ff', pointerEvents: 'none', zIndex: 1 }}
-      />
-
-      {/* ── Grid flash ────────────────────────────────────────── */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: phase >= 1 ? [0.28, 0] : 0 }}
-        transition={{ duration: 1.1, ease: 'easeOut' }}
-        style={{
-          position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1,
-          backgroundImage: 'linear-gradient(rgba(0,240,255,0.07) 1px,transparent 1px),linear-gradient(90deg,rgba(0,240,255,0.07) 1px,transparent 1px)',
-          backgroundSize: '60px 60px',
-        }}
-      />
-
-      {/* ── Targeting crosshair — horizontal ─────────────────── */}
-      <motion.div
-        initial={{ scaleX: 1, opacity: 0 }}
-        animate={{ scaleX: phase >= 1 ? [1, 0] : 1, opacity: phase >= 1 ? [0.75, 0] : 0 }}
-        transition={{ duration: 0.58, ease: [0.4, 0, 1, 1] }}
-        style={{
-          position: 'absolute', height: 1, width: '100vw', pointerEvents: 'none', zIndex: 2,
-          background: 'linear-gradient(90deg,transparent 0%,rgba(0,240,255,0.55) 15%,#00f0ff 50%,rgba(0,240,255,0.55) 85%,transparent 100%)',
-        }}
-      />
-
-      {/* ── Targeting crosshair — vertical ───────────────────── */}
-      <motion.div
-        initial={{ scaleY: 1, opacity: 0 }}
-        animate={{ scaleY: phase >= 1 ? [1, 0] : 1, opacity: phase >= 1 ? [0.75, 0] : 0 }}
-        transition={{ duration: 0.58, ease: [0.4, 0, 1, 1] }}
-        style={{
-          position: 'absolute', width: 1, height: '100vh', pointerEvents: 'none', zIndex: 2,
-          background: 'linear-gradient(180deg,transparent 0%,rgba(0,240,255,0.55) 15%,#00f0ff 50%,rgba(0,240,255,0.55) 85%,transparent 100%)',
-        }}
-      />
-
-      {/* ── Expanding rings ───────────────────────────────────── */}
-      {[0, 1, 2, 3].map(i => (
-        <motion.div key={`ring-${i}`}
-          initial={{ scale: 0, opacity: 0 }}
-          animate={phase >= 1
-            ? { scale: [0, 5], opacity: [0, 0.7, 0] }
-            : { scale: 0, opacity: 0 }
-          }
-          transition={{
-            duration: 1.55,
-            delay: i * 0.19,
-            ease: [0.2, 0, 0.8, 1],
-            opacity: { times: [0, 0.07, 1] },
-          }}
-          style={{
-            position: 'absolute', pointerEvents: 'none', zIndex: 2,
-            width: 100, height: 100, borderRadius: '50%',
-            border: `1.5px solid ${i % 2 === 0 ? 'rgba(0,240,255,0.75)' : 'rgba(124,58,237,0.65)'}`,
-          }}
-        />
-      ))}
-
-      {/* ── Particles burst outward ───────────────────────────── */}
-      {phase >= 1 && PARTICLES.map((p, i) => (
-        <motion.div key={`p-${i}`}
-          initial={{ x: 0, y: 0, opacity: 0, scale: 0 }}
-          animate={{ x: p.x, y: p.y, opacity: [0, 1, 0], scale: [0, 1, 0] }}
-          transition={{ duration: 1.05, delay: p.delay, ease: 'easeOut', opacity: { times: [0, 0.18, 1] } }}
-          style={{
-            position: 'absolute', pointerEvents: 'none', zIndex: 2,
-            width: p.size, height: p.size, borderRadius: '50%',
-            background: p.color, boxShadow: `0 0 7px ${p.color}`,
-          }}
-        />
-      ))}
-
-      {/* ── Logo ──────────────────────────────────────────────── */}
-      <motion.div
-        animate={{
-          x: logoX,
-          rotate: logoRotate,
-          opacity: phase >= 2 ? 1 : 0,
-          scale:   phase >= 2 ? 1 : 0.12,
-          filter:  phase >= 2 ? 'blur(0px)' : 'blur(24px)',
-        }}
-        transition={logoTrans}
-        style={{
-          position: 'absolute',
-          left: '50%', top: '50%',
-          marginLeft: -(LOGO_SIZE / 2),
-          marginTop:  -(LOGO_SIZE / 2),
-          zIndex: 4,
-          borderRadius: '50%',
-          transformOrigin: 'center center',
-        }}
-      >
-        {/* Glow ring around logo — pulses when settled */}
+      {/* Corner brackets */}
+      {[
+        { top: 28, left: 28,     borderTop:    '1px solid rgba(0,240,255,0.5)', borderLeft:   '1px solid rgba(0,240,255,0.5)' },
+        { top: 28, right: 28,    borderTop:    '1px solid rgba(0,240,255,0.5)', borderRight:  '1px solid rgba(0,240,255,0.5)' },
+        { bottom: 28, left: 28,  borderBottom: '1px solid rgba(0,240,255,0.5)', borderLeft:   '1px solid rgba(0,240,255,0.5)' },
+        { bottom: 28, right: 28, borderBottom: '1px solid rgba(0,240,255,0.5)', borderRight:  '1px solid rgba(0,240,255,0.5)' },
+      ].map((s, i) => (
         <motion.div
-          animate={phase >= 5
-            ? { boxShadow: ['0 0 0px rgba(0,240,255,0)', '0 0 60px rgba(0,240,255,0.9)', '0 0 30px rgba(0,240,255,0.4)'] }
-            : { boxShadow: '0 0 30px rgba(0,240,255,0.45)' }
-          }
-          transition={{ duration: 0.7, ease: 'easeOut' }}
-          style={{ borderRadius: '50%' }}
+          key={i}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: phase >= 1 ? 0.9 : 0 }}
+          transition={{ duration: 0.3, delay: i * 0.06 }}
+          style={{ position: 'absolute', width: 22, height: 22, ...s }}
+        />
+      ))}
+
+      {/* ── Orbital system ── 200×200; logo at top:52 left:52; pivot (100,100) */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: phase >= 1 ? 1 : 0 }}
+        transition={{ duration: 0.6 }}
+        style={{ position: 'relative', width: 200, height: 200, marginBottom: 30 }}
+      >
+        {/* Ring 1 — cyan r=70, CW 4s, 270° arc */}
+        <div style={{
+          position: 'absolute', top: 30, left: 30, width: 140, height: 140,
+          borderRadius: '50%', border: '1px solid rgba(0,240,255,0.5)',
+          borderTopColor: 'transparent',
+          animation: 'sol-cw 4s linear infinite',
+        }} />
+
+        {/* Ring 2 — purple r=84, CCW 7s, 270° arc */}
+        <div style={{
+          position: 'absolute', top: 16, left: 16, width: 168, height: 168,
+          borderRadius: '50%', border: '1px solid rgba(124,58,237,0.4)',
+          borderRightColor: 'transparent',
+          animation: 'sol-ccw 7s linear infinite',
+        }} />
+
+        {/* Ring 3 — blue r=100, CW 13s, 270° arc */}
+        <div style={{
+          position: 'absolute', top: 0, left: 0, width: 200, height: 200,
+          borderRadius: '50%', border: '0.75px solid rgba(59,130,246,0.28)',
+          borderBottomColor: 'transparent',
+          animation: 'sol-cw 13s linear infinite',
+        }} />
+
+        {/* Dot 1 — cyan r=76, CW 4.5s */}
+        <div style={{ position: 'absolute', inset: 0, animation: 'sol-cw 4.5s linear infinite' }}>
+          <div style={{
+            position: 'absolute', top: 21, left: 97, width: 6, height: 6,
+            borderRadius: '50%', background: '#00f0ff',
+            boxShadow: '0 0 7px rgba(0,240,255,0.95)',
+          }} />
+        </div>
+
+        {/* Dot 2 — purple r=88, CCW 7.5s */}
+        <div style={{ position: 'absolute', inset: 0, animation: 'sol-ccw 7.5s linear infinite' }}>
+          <div style={{
+            position: 'absolute', top: 9, left: 97, width: 5, height: 5,
+            borderRadius: '50%', background: '#7c3aed',
+            boxShadow: '0 0 7px rgba(124,58,237,0.95)',
+          }} />
+        </div>
+
+        {/* Dot 3 — blue r=100, CW 13.5s */}
+        <div style={{ position: 'absolute', inset: 0, animation: 'sol-cw 13.5s linear infinite' }}>
+          <div style={{
+            position: 'absolute', top: -3, left: 97, width: 4, height: 4,
+            borderRadius: '50%', background: '#3b82f6',
+            boxShadow: '0 0 6px rgba(59,130,246,0.9)',
+          }} />
+        </div>
+
+        {/* Ping ring — one-shot Framer Motion */}
+        <motion.div
+          initial={{ scale: 0.5, opacity: 0 }}
+          animate={{ scale: phase >= 1 ? [0.5, 2.6] : 0.5, opacity: phase >= 1 ? [0.7, 0] : 0 }}
+          transition={{ duration: 1.0, ease: 'easeOut' }}
+          style={{
+            position: 'absolute', top: 52, left: 52, width: 96, height: 96,
+            borderRadius: '50%', border: '1.5px solid rgba(0,240,255,0.65)',
+            pointerEvents: 'none',
+          }}
+        />
+
+        {/* Logo */}
+        <motion.div
+          initial={{ scale: 0.78, opacity: 0 }}
+          animate={{ scale: phase >= 1 ? 1 : 0.78, opacity: phase >= 1 ? 1 : 0 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          style={{ position: 'absolute', top: 52, left: 52 }}
         >
           <img
             src="/logo.webp" alt="SOL"
             style={{
-              width: LOGO_SIZE, height: LOGO_SIZE,
-              borderRadius: '50%', objectFit: 'cover',
-              border: '2.5px solid rgba(0,240,255,0.75)',
-              display: 'block',
-              boxShadow: '0 0 28px rgba(0,240,255,0.5), 0 0 60px rgba(0,240,255,0.18)',
+              width: 96, height: 96, borderRadius: '50%', objectFit: 'cover',
+              display: 'block', animation: 'sol-pulse 2.4s ease-in-out infinite',
             }}
           />
         </motion.div>
       </motion.div>
 
-      {/* ── Brand lockup row ──────────────────────────────────── */}
-      {/* Invisible placeholder holds logo's space; actual logo floats above it */}
-      <div style={{
-        position: 'absolute',
-        left: '50%', top: '50%',
-        transform: 'translate(-50%, -50%)',
-        display: 'flex', alignItems: 'center', gap: '22px',
-        pointerEvents: 'none', zIndex: 3,
-      }}>
-        {/* Logo space-holder — measured so we can roll the logo here */}
-        <div
-          ref={placeholderRef}
-          style={{ width: LOGO_SIZE, height: LOGO_SIZE, flexShrink: 0, opacity: 0 }}
-        />
-
-        {/* "STATS O LOCKED" — letter-by-letter reveal */}
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          {TEXT_LETTERS.map((ch, i) => (
-            <motion.span
-              key={i}
-              initial={{ opacity: 0, y: 32, filter: 'blur(12px)' }}
-              animate={phase >= 4
-                ? { opacity: 1, y: 0, filter: 'blur(0px)' }
-                : { opacity: 0, y: 32, filter: 'blur(12px)' }
-              }
-              transition={{
-                delay:    phase >= 4 ? i * 0.052 : 0,
-                duration: 0.38,
-                ease:     [0.22, 1, 0.36, 1],
-              }}
-              style={{
-                fontFamily:  "'Space Grotesk', sans-serif",
-                fontSize:    'clamp(1.5rem, 3.2vw, 3rem)',
-                fontWeight:  800,
-                letterSpacing: '0.07em',
-                lineHeight:  1,
-                color:       ch === ' ' ? 'transparent' : '#fff',
-                textShadow:  ch !== ' ' ? '0 0 40px rgba(0,240,255,0.22)' : 'none',
-                userSelect:  'none',
-              }}
-            >
-              {ch === ' ' ? '  ' : ch}
-            </motion.span>
-          ))}
-        </div>
-      </div>
-
-      {/* ── Glow burst when logo lands ────────────────────────── */}
-      {phase >= 5 && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.6 }}
-          animate={{ opacity: [0, 0.55, 0], scale: [0.6, 2.2, 3.5] }}
-          transition={{ duration: 0.9, ease: 'easeOut' }}
-          style={{
-            position: 'absolute',
-            width: 160, height: 160, borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(0,240,255,0.4) 0%, rgba(124,58,237,0.15) 55%, transparent 80%)',
-            left: `calc(50% + ${finalX}px - 80px)`,
-            top:  'calc(50% - 80px)',
-            pointerEvents: 'none', zIndex: 3,
-          }}
-        />
-      )}
-
-      {/* ── Thin bottom highlight line (matches website Hero border) */}
+      {/* Club name + subtitle */}
       <motion.div
-        animate={{ opacity: phase >= 4 ? [0, 0.6, 0.35] : 0 }}
-        transition={{ duration: 1.2, delay: 0.4, ease: 'easeOut' }}
-        style={{
-          position: 'absolute', bottom: 0, left: 0, right: 0, height: 1,
-          background: 'linear-gradient(90deg,transparent,rgba(0,240,255,0.6),rgba(124,58,237,0.4),transparent)',
-          pointerEvents: 'none', zIndex: 5,
-        }}
-      />
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: phase >= 2 ? 1 : 0, y: phase >= 2 ? 0 : 14 }}
+        transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+        style={{ textAlign: 'center' }}
+      >
+        <div style={{
+          fontFamily: "'Space Grotesk', sans-serif",
+          fontSize: 'clamp(1.5rem, 4vw, 2.5rem)',
+          fontWeight: 800, letterSpacing: '0.1em',
+          color: '#fff', lineHeight: 1, marginBottom: 10,
+        }}>
+          STATS-O-LOCKED
+        </div>
+        <div style={{
+          fontFamily: "'Space Grotesk', sans-serif",
+          fontSize: '0.7rem', fontWeight: 500,
+          letterSpacing: '3.5px', color: 'rgba(0,240,255,0.6)',
+          textTransform: 'uppercase',
+        }}>
+          VIT Bhopal &middot; AI &amp; Data Club
+        </div>
+      </motion.div>
 
     </motion.div>
   );
 }
 
-/* ── Root ────────────────────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────────
+   ROOT
+   • Site is NOT mounted during intro → Three.js has zero GPU load
+   • handleIntroDone: mount site + start exit simultaneously.
+     All lazy chunks are already resolved, so the site renders
+     instantly — no Suspense fallback is ever shown.
+───────────────────────────────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────────
+   Smooth crossfade: intro ──► site
+
+   1. onDone  → mount site at opacity 0 (invisible under intro)
+   2. +150 ms → React has painted site's first frame;
+                start BOTH fades simultaneously:
+                  intro: opacity 1 → 0  (0.6 s)
+                  site:  opacity 0 → 1  (0.6 s)
+   3. +750 ms → complete. No blank frame, no flash.
+
+   Both backgrounds are identical gradients so the overlap
+   is a perfect seamless blend.
+───────────────────────────────────────────────────────────────── */
 export default function App() {
   const [introVisible, setIntroVisible] = useState(true);
+  const [siteMounted,  setSiteMounted]  = useState(false);
+  const [siteVisible,  setSiteVisible]  = useState(false);
+
+  const handleIntroDone = () => {
+    setSiteMounted(true);           // render site tree at opacity 0
+    setTimeout(() => {
+      setIntroVisible(false);       // intro  opacity 1 → 0
+      setSiteVisible(true);         // site   opacity 0 → 1
+    }, 150);                        // 150 ms: React paints first frame
+  };
 
   return (
     <div style={{ minHeight: '100vh', background: '#020b16' }}>
       <AmbientGlow />
       <CursorGlow />
 
-      {/* Website is always mounted — it loads behind the intro for a seamless blend */}
-      <HashRouter>
-        <Navbar />
-        <main>
-          <AnimatedRoutes />
-        </main>
-        <Footer />
-        <RobotAssistant />
-      </HashRouter>
+      {siteMounted && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: siteVisible ? 1 : 0 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          style={{ minHeight: '100vh' }}
+        >
+          <HashRouter>
+            <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+              <Navbar />
+              <main style={{ flex: 1 }}><AnimatedRoutes /></main>
+              <Footer />
+            </div>
+            <RobotAssistant />
+          </HashRouter>
+        </motion.div>
+      )}
 
-      {/* Intro overlay slides upward to reveal the already-loaded website */}
       <AnimatePresence>
-        {introVisible && (
-          <IntroOverlay onDone={() => setIntroVisible(false)} />
-        )}
+        {introVisible && <IntroOverlay onDone={handleIntroDone} />}
       </AnimatePresence>
     </div>
   );

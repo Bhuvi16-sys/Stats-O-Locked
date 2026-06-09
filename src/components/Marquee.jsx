@@ -2,7 +2,7 @@ const items = [
   { icon: '🚀', text: 'TechCorp Summit' },
   { icon: '⚡', text: 'DataHack 2.0' },
   { icon: '🎭', text: 'CTRL + LOL' },
-  { icon: '👥', text: '200+ Members' },
+  { icon: '👥', text: '70+ Members' },
   { icon: '🎵', text: 'Techila Unplugged' },
   { icon: '🧠', text: 'AI & Data Science' },
   { icon: '📊', text: 'Stats-O-Locked' },
@@ -19,6 +19,7 @@ const Row = ({ items, reverse = false, speed = 28 }) => (
       display: 'flex', gap: 0,
       animation: `marquee-${reverse ? 'r' : 'f'} ${speed}s linear infinite`,
       whiteSpace: 'nowrap', flexShrink: 0,
+      willChange: 'transform',
     }}>
       {[...items, ...items].map((item, i) => (
         <span key={i} style={{

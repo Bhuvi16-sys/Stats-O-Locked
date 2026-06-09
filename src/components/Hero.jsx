@@ -9,11 +9,11 @@ import { Sparkles } from 'lucide-react';
 function StarField() {
   const ref = useRef();
   const positions = useMemo(() => {
-    const arr = new Float32Array(1200 * 3);
+    const arr = new Float32Array(600 * 3);
     for (let i = 0; i < arr.length; i += 3) {
       arr[i] = (Math.random() - 0.5) * 40;
       arr[i + 1] = (Math.random() - 0.5) * 40;
-      arr[i + 2] = (Math.random() - 0.5) * 40 - 10; // push behind
+      arr[i + 2] = (Math.random() - 0.5) * 40 - 10;
     }
     return arr;
   }, []);
@@ -42,7 +42,7 @@ function StarField() {
 function ParticleHalo() {
   const ref = useRef();
   const positions = useMemo(() => {
-    const arr = new Float32Array(500 * 3);
+    const arr = new Float32Array(200 * 3);
     for (let i = 0; i < arr.length; i += 3) {
       const u = Math.random();
       const v = Math.random();
@@ -109,8 +109,8 @@ function Globe() {
   return (
     <group position={[0, 0, 0]}>
       {/* ── Translucent glass shell ── */}
-      <Sphere ref={meshRef} args={[2.7, 72, 72]}>
-        <meshPhysicalMaterial
+      <Sphere ref={meshRef} args={[2.7, 48, 48]}>
+        <meshStandardMaterial
           color="#00f0ff"
           emissive="#3b82f6"
           emissiveIntensity={0.3}
@@ -118,14 +118,12 @@ function Globe() {
           opacity={0.10}
           roughness={0.05}
           metalness={0.95}
-          transmission={0.7}
-          thickness={2}
           depthWrite={false}
         />
       </Sphere>
 
       {/* ── Outer wireframe ── */}
-      <Sphere args={[2.73, 36, 36]}>
+      <Sphere args={[2.73, 24, 24]}>
         <meshStandardMaterial
           color="#00f0ff"
           wireframe
@@ -136,7 +134,7 @@ function Globe() {
       </Sphere>
 
       {/* ── Inner wireframe (faint purple) ── */}
-      <Sphere args={[2.1, 22, 22]}>
+      <Sphere args={[2.1, 14, 14]}>
         <meshStandardMaterial
           color="#7c3aed"
           wireframe
@@ -148,7 +146,7 @@ function Globe() {
 
       {/* ── Ring 1: big cyan sweep ── */}
       <mesh ref={ring1Ref}>
-        <torusGeometry args={[4.6, 0.010, 16, 140]} />
+        <torusGeometry args={[4.6, 0.010, 12, 80]} />
         <meshStandardMaterial
           color="#00f0ff"
           emissive="#00f0ff"
@@ -160,7 +158,7 @@ function Globe() {
 
       {/* ── Ring 2: larger purple sweep ── */}
       <mesh ref={ring2Ref}>
-        <torusGeometry args={[5.5, 0.007, 16, 140]} />
+        <torusGeometry args={[5.5, 0.007, 12, 80]} />
         <meshStandardMaterial
           color="#7c3aed"
           emissive="#7c3aed"
@@ -172,7 +170,7 @@ function Globe() {
 
       {/* ── Ring 3: extra sweep (blue) ── */}
       <mesh ref={ring3Ref}>
-        <torusGeometry args={[3.9, 0.008, 16, 140]} />
+        <torusGeometry args={[3.9, 0.008, 12, 80]} />
         <meshStandardMaterial
           color="#3b82f6"
           emissive="#3b82f6"
@@ -193,7 +191,7 @@ function Globe() {
 export default function Hero() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
-    const id = setTimeout(() => setMounted(true), 200);
+    const id = setTimeout(() => setMounted(true), 50);
     return () => clearTimeout(id);
   }, []);
 
@@ -208,8 +206,8 @@ export default function Hero() {
         alignItems: 'center',
         position: 'relative',
         overflow: 'hidden',
-        paddingTop: '90px',
-        paddingBottom: '60px',
+        paddingTop: 'clamp(80px,12vw,90px)',
+        paddingBottom: 'clamp(32px,6vw,60px)',
         background: 'transparent',
       }}
     >
@@ -222,13 +220,16 @@ export default function Hero() {
           height: '100%',
           zIndex: 0,
           pointerEvents: 'none',
+          willChange: 'transform',
+          transform: 'translateZ(0)',
         }}
       >
         {mounted && (
           <Canvas
-            /* Camera moved much closer + wider FOV so globe fills the screen */
             camera={{ position: [0, 0, 4.5], fov: 65 }}
-            gl={{ antialias: true, alpha: true }}
+            dpr={[1, 1.5]}
+            performance={{ min: 0.5 }}
+            gl={{ antialias: window.devicePixelRatio < 2, alpha: true, powerPreference: 'high-performance' }}
             style={{ width: '100%', height: '100%', display: 'block' }}
           >
             <ambientLight intensity={0.15} />
@@ -317,7 +318,7 @@ export default function Hero() {
           transition={{ duration: 0.9, delay: 0.18 }}
           style={{
             fontFamily: "'Space Grotesk', sans-serif",
-            fontSize: 'clamp(2.6rem, 7vw, 5.5rem)',
+            fontSize: 'clamp(1.9rem, 7vw, 5.5rem)',
             fontWeight: 700,
             lineHeight: 1,
             letterSpacing: '0.06em',
@@ -341,10 +342,10 @@ export default function Hero() {
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '12px',
+            gap: '8px',
             flexWrap: 'wrap',
             justifyContent: 'center',
-            marginBottom: '40px',
+            marginBottom: '28px',
           }}
         >
           <span style={{ padding: '5px 14px', borderRadius: '10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.09)', fontSize: '0.68rem', fontWeight: 600, color: 'rgba(255,255,255,0.55)', fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '2px', textTransform: 'uppercase' }}>
@@ -361,7 +362,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.44 }}
-          style={{ maxWidth: '660px', marginBottom: '44px' }}
+          style={{ maxWidth: '660px', marginBottom: 'clamp(24px,5vw,44px)' }}
         >
           <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: 'clamp(0.9rem, 1.6vw, 1.05rem)', lineHeight: 1.75, marginBottom: '14px', fontFamily: "'Inter', sans-serif" }}>
             <span style={{ color: '#00f0ff', fontWeight: 600, textShadow: '0 0 10px rgba(0,240,255,0.5)' }}>Welcome to Stats-o-Locked Club</span>, a vibrant and dynamic student community dedicated to fostering{' '}

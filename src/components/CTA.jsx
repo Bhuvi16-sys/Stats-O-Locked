@@ -45,7 +45,7 @@ export default function CTA() {
       <div style={{
         maxWidth: '900px',
         margin: '0 auto',
-        padding: '0 40px',
+        padding: '0 clamp(16px,4vw,40px)',
         textAlign: 'center',
         position: 'relative',
         zIndex: 1,
@@ -96,12 +96,12 @@ export default function CTA() {
           {/* Sub text */}
           <p style={{
             color: 'rgba(255,255,255,0.55)',
-            fontSize: '1.05rem',
+            fontSize: 'clamp(0.88rem,2.5vw,1.05rem)',
             maxWidth: '560px',
             margin: '0 auto 48px',
             lineHeight: 1.75,
           }}>
-            Connect with 200+ passionate minds, work on cutting-edge projects, and accelerate your journey in the world of data and artificial intelligence.
+            Connect with 70+ passionate minds, work on cutting-edge projects, and accelerate your journey in the world of data and artificial intelligence.
           </p>
 
           {/* CTA */}
@@ -147,7 +147,7 @@ export default function CTA() {
               marginTop: '60px',
               display: 'flex',
               justifyContent: 'center',
-              gap: '40px',
+              gap: 'clamp(16px,4vw,40px)',
               flexWrap: 'wrap',
               borderTop: '1px solid rgba(255,255,255,0.07)',
               paddingTop: '40px',

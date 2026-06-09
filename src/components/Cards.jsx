@@ -156,32 +156,38 @@ function DotGlobe() {
         />
 
         {/* ── Orbital particles ── */}
-        {orbitals.map((orb, i) => (
-          <motion.circle
-            key={i}
-            r={orb.size}
-            fill={orb.color}
-            opacity={0.9}
-            style={{ filter: `drop-shadow(0 0 5px ${orb.color})` }}
-            animate={{
-              cx: [
-                160 + orb.r * Math.cos((orb.startAngle * Math.PI) / 180),
-                160 + orb.r * Math.cos(((orb.startAngle + 180) * Math.PI) / 180),
-                160 + orb.r * Math.cos(((orb.startAngle + 360) * Math.PI) / 180),
-              ],
-              cy: [
-                160 + (orb.r * 0.35) * Math.sin((orb.startAngle * Math.PI) / 180),
-                160 + (orb.r * 0.35) * Math.sin(((orb.startAngle + 180) * Math.PI) / 180),
-                160 + (orb.r * 0.35) * Math.sin(((orb.startAngle + 360) * Math.PI) / 180),
-              ],
-            }}
-            transition={{
-              repeat: Infinity,
-              duration: orb.duration,
-              ease: 'linear',
-            }}
-          />
-        ))}
+        {orbitals.map((orb, i) => {
+          const startCx = 160 + orb.r * Math.cos((orb.startAngle * Math.PI) / 180);
+          const startCy = 160 + (orb.r * 0.35) * Math.sin((orb.startAngle * Math.PI) / 180);
+          return (
+            <motion.circle
+              key={i}
+              cx={startCx}
+              cy={startCy}
+              r={orb.size}
+              fill={orb.color}
+              opacity={0.9}
+              style={{ filter: `drop-shadow(0 0 5px ${orb.color})` }}
+              animate={{
+                cx: [
+                  startCx,
+                  160 + orb.r * Math.cos(((orb.startAngle + 180) * Math.PI) / 180),
+                  160 + orb.r * Math.cos(((orb.startAngle + 360) * Math.PI) / 180),
+                ],
+                cy: [
+                  startCy,
+                  160 + (orb.r * 0.35) * Math.sin(((orb.startAngle + 180) * Math.PI) / 180),
+                  160 + (orb.r * 0.35) * Math.sin(((orb.startAngle + 360) * Math.PI) / 180),
+                ],
+              }}
+              transition={{
+                repeat: Infinity,
+                duration: orb.duration,
+                ease: 'linear',
+              }}
+            />
+          );
+        })}
 
         {/* ── Pulsing hot-spots ── */}
         {[
@@ -192,7 +198,7 @@ function DotGlobe() {
         ].map((pin, i) => (
           <g key={i}>
             <motion.circle
-              cx={pin.x} cy={pin.y} r={4}
+              cx={pin.x} cy={pin.y} r={3}
               fill="none"
               stroke="rgba(0,240,255,0.5)"
               strokeWidth="1"

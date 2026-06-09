@@ -75,8 +75,8 @@ function EventTab({ event, isActive, onClick }) {
       whileHover={{ y: -3 }}
       whileTap={{ scale: 0.97 }}
       style={{
-        flex: '1 1 0', minWidth: 0,
-        padding: '20px 22px',
+        flex: '1 1 150px', minWidth: 0,
+        padding: 'clamp(14px,2vw,20px) clamp(14px,2vw,22px)',
         background: isActive ? `${event.accentColor}12` : 'rgba(255,255,255,0.02)',
         border: isActive ? `1px solid ${event.accentColor}55` : '1px solid rgba(255,255,255,0.07)',
         borderRadius: 18, cursor: 'pointer', textAlign: 'left',
@@ -166,7 +166,7 @@ function EventDetail({ event }) {
     >
       {/* Panel header bar */}
       <div style={{
-        padding: '28px 36px 24px',
+        padding: 'clamp(16px,3vw,28px) clamp(16px,4vw,36px) clamp(14px,2.5vw,24px)',
         borderBottom: '1px solid rgba(255,255,255,0.06)',
         background: `${event.accentColor}08`,
         display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap',
@@ -194,7 +194,7 @@ function EventDetail({ event }) {
       </div>
 
       {/* Panel body */}
-      <div style={{ padding: '32px 36px', display: 'grid', gridTemplateColumns: '1fr 300px', gap: 40 }}>
+      <div className="events-detail-grid" style={{ padding: 'clamp(16px,3vw,32px) clamp(16px,4vw,36px)', display: 'grid', gridTemplateColumns: '1fr 300px', gap: 'clamp(20px,3vw,40px)' }}>
 
         {/* Left: narrative */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
@@ -359,7 +359,7 @@ export default function Events() {
   const activeEvent = flagshipEvents.find(e => e.id === activeId);
 
   return (
-    <div style={{ minHeight: '100vh', padding: '120px 0 100px', position: 'relative', overflow: 'hidden' }}>
+    <div style={{ minHeight: '100vh', padding: 'clamp(80px,10vw,120px) 0 clamp(60px,8vw,100px)', position: 'relative', overflow: 'hidden' }}>
 
       {/* Background glows */}
       <div style={{ position: 'absolute', top: '5%', left: '-15%', width: '55vw', height: '55vw',
@@ -368,7 +368,7 @@ export default function Events() {
         borderRadius: '50%', background: 'radial-gradient(circle,rgba(124,58,237,0.05) 0%,transparent 60%)', pointerEvents: 'none' }} />
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: 0.2, pointerEvents: 'none' }} />
 
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 32px' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 clamp(16px,4vw,32px)' }}>
 
         {/* ── Hero ── */}
         <motion.div
@@ -432,7 +432,7 @@ export default function Events() {
             label="Upcoming Events"
             sub="Stay tuned — bigger, bolder initiatives are in the pipeline."
           />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: 20 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(260px,100%),1fr))', gap: 20 }}>
             {upcomingEvents.map((ev, i) => (
               <UpcomingCard key={i} ev={ev} index={i} />
             ))}

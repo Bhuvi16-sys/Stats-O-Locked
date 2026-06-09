@@ -28,7 +28,7 @@ function fade(delay = 0) {
 
 export default function About() {
   return (
-    <div style={{ minHeight: '100vh', padding: '120px 0 100px', position: 'relative', overflow: 'hidden' }}>
+    <div style={{ minHeight: '100vh', padding: 'clamp(80px,10vw,120px) 0 clamp(60px,8vw,100px)', position: 'relative', overflow: 'hidden' }}>
 
       {/* Ambient glows */}
       <div style={{ position: 'absolute', top: '5%',  left: '-10%', width: '55vw', height: '55vw',
@@ -39,7 +39,7 @@ export default function About() {
         borderRadius: '50%', background: 'radial-gradient(circle,rgba(59,130,246,0.04) 0%,transparent 60%)', pointerEvents: 'none' }} />
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: 0.18, pointerEvents: 'none' }} />
 
-      <div style={{ maxWidth: 1160, margin: '0 auto', padding: '0 32px' }}>
+      <div style={{ maxWidth: 1160, margin: '0 auto', padding: '0 clamp(16px,4vw,32px)' }}>
 
         {/* ── HERO ──────────────────────────────────────────────── */}
         <motion.div {...fade()} style={{ marginBottom: 100 }}>
@@ -74,14 +74,14 @@ export default function About() {
 
         {/* ── WHO WE ARE ────────────────────────────────────────── */}
         <motion.div {...fade()} style={{ marginBottom: 80 }}>
-          <div style={{
+          <div className="about-two-col" style={{
             display: 'grid', gridTemplateColumns: '1fr 340px', gap: 32, alignItems: 'center',
           }}>
             {/* Text */}
             <div style={{
               background: 'rgba(255,255,255,0.02)', backdropFilter: 'blur(20px)',
               border: '1px solid rgba(255,255,255,0.07)',
-              borderRadius: 28, padding: '44px 48px',
+              borderRadius: 28, padding: 'clamp(24px,4vw,48px)',
               position: 'relative', overflow: 'hidden',
             }}>
               <div style={{
@@ -156,7 +156,7 @@ export default function About() {
               </motion.div>
 
               {[
-                { label: '200+', sub: 'Active Members', color: '#00f0ff' },
+                { label: '70+', sub: 'Active Members', color: '#00f0ff' },
                 { label: '3+',   sub: 'Flagship Events', color: '#7c3aed' },
               ].map(({ label, sub, color }, i) => (
                 <motion.div key={i} {...fade(0.15 + i * 0.08)}
@@ -192,7 +192,7 @@ export default function About() {
             </h2>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+          <div className="about-two-col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
             {/* Vision */}
             <motion.div
               {...fade(0.1)}
@@ -319,7 +319,7 @@ export default function About() {
             </h2>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 20 }}>
+          <div className="about-four-col" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 20 }}>
             {values.map(({ icon: Icon, title, desc, color }, i) => (
               <motion.div
                 key={title}
@@ -382,7 +382,7 @@ export default function About() {
             </h2>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(320px,1fr))', gap: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(320px,100%),1fr))', gap: 16 }}>
             {objectives.map((obj, i) => (
               <motion.div
                 key={i}
@@ -433,7 +433,7 @@ export default function About() {
           style={{
             background: 'linear-gradient(135deg,rgba(0,240,255,0.06),rgba(124,58,237,0.06))',
             border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: 28, padding: '48px 52px',
+            borderRadius: 28, padding: 'clamp(24px,4vw,52px)',
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             gap: 32, flexWrap: 'wrap', position: 'relative', overflow: 'hidden',
           }}

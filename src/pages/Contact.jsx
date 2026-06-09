@@ -16,9 +16,9 @@ const contactItems = [
   {
     icon: Phone,
     label: 'Phone',
-    value: '+91 99939 45259',
+    value: '+91 72762 34332',
     sub: 'Mon – Sat, 10 am – 6 pm',
-    href: 'tel:+919993945259',
+    href: 'tel:+917276234332',
     accent: '#7c3aed',
   },
   {
@@ -186,7 +186,7 @@ function ContactForm() {
   return (
     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
       {/* row: name + email */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 28 }}>
+      <div className="contact-form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 28 }}>
         {[
           { id: 'name', label: 'Your Name', type: 'text', placeholder: 'Ankit Sharma' },
           { id: 'email', label: 'Email Address', type: 'email', placeholder: 'you@email.com' },
@@ -271,7 +271,7 @@ function ContactForm() {
 /* ── Page ─────────────────────────────────────────────── */
 export default function Contact() {
   return (
-    <div style={{ minHeight: '100vh', padding: '120px 0 80px', position: 'relative', overflow: 'hidden' }}>
+    <div style={{ minHeight: '100vh', padding: 'clamp(80px,10vw,120px) 0 clamp(50px,8vw,80px)', position: 'relative', overflow: 'hidden' }}>
 
       {/* Background glows */}
       <div style={{ position: 'absolute', top: '10%', left: '-10%', width: '50vw', height: '50vw',
@@ -283,7 +283,7 @@ export default function Contact() {
       {/* Faint grid */}
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: 0.25, pointerEvents: 'none' }} />
 
-      <div style={{ maxWidth: 1160, margin: '0 auto', padding: '0 32px' }}>
+      <div style={{ maxWidth: 1160, margin: '0 auto', padding: '0 clamp(16px,4vw,32px)' }}>
 
         {/* ── Hero heading ─────────────────────────────── */}
         <motion.div
@@ -335,7 +335,7 @@ export default function Contact() {
         </motion.div>
 
         {/* ── Two-column content ───────────────────────── */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'clamp(280px, 38%, 440px) 1fr', gap: 32, alignItems: 'start' }}>
+        <div className="contact-grid" style={{ display: 'grid', gridTemplateColumns: 'clamp(280px, 38%, 440px) 1fr', gap: 32, alignItems: 'start' }}>
 
           {/* Left panel */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -405,7 +405,7 @@ export default function Contact() {
             style={{ background: 'rgba(255,255,255,0.015)',
               backdropFilter: 'blur(24px)',
               border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: 28, padding: '44px 44px 40px',
+              borderRadius: 28, padding: 'clamp(22px,4vw,44px)',
               position: 'relative', overflow: 'hidden' }}
           >
             {/* Top accent line */}
@@ -441,8 +441,9 @@ export default function Contact() {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.4; }
         }
-        @media (max-width: 768px) {
+        @media (max-width: 640px) {
           .contact-grid { grid-template-columns: 1fr !important; }
+          .contact-form-row { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </div>

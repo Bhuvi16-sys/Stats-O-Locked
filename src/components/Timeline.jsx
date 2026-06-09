@@ -37,8 +37,8 @@ const milestones = [
   {
     year: '2025',
     quarter: 'Q2',
-    title: '200+ Members',
-    desc: 'Crossed the 200 active member milestone with 17 dedicated department leads driving 5+ domains simultaneously.',
+    title: '70+ Members',
+    desc: 'Built a 70+ member community with dedicated department leads driving 5+ domains simultaneously.',
     color: '#10b981',
     icon: '👥',
   },
@@ -182,7 +182,7 @@ export default function Timeline() {
           <p style={{
             color: 'rgba(255,255,255,0.45)', fontSize: '0.95rem', maxWidth: '480px', margin: '0 auto',
           }}>
-            From our founding to 200+ members — click any milestone to explore our journey.
+            From our founding to 70+ members — click any milestone to explore our journey.
           </p>
         </motion.div>
 

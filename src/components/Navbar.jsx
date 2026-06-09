@@ -49,7 +49,7 @@ export default function Navbar() {
           width: '100%',
           maxWidth: '1400px',
           margin: '0 auto',
-          padding: '0 40px',
+          padding: '0 clamp(16px, 4vw, 40px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -100,7 +100,6 @@ export default function Navbar() {
         <div
           className="hidden md:flex"
           style={{
-            display: 'flex',
             gap: '32px',
             position: 'absolute',
             left: '50%',
@@ -187,7 +186,7 @@ export default function Navbar() {
                 background: 'rgba(2,11,22,0.97)',
                 backdropFilter: 'blur(24px)',
                 borderBottom: '1px solid rgba(0,240,255,0.1)',
-                padding: '16px 40px 24px',
+                padding: '16px 20px 24px',
                 display: 'flex',
                 flexDirection: 'column',
               }}

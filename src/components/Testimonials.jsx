@@ -363,7 +363,7 @@ export default function Testimonials() {
           }}
         >
           {[
-            { value: '200+', label: 'Active Members' },
+            { value: '70+', label: 'Active Members' },
             { value: '4.9 / 5', label: 'Avg. Rating' },
             { value: '95%', label: 'Would Recommend' },
           ].map((stat) => (

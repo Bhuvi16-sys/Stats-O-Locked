@@ -11,7 +11,7 @@ const objectives = [
 ];
 
 const highlights = [
-  { icon: Users, label: '200+ Members', color: '#00f0ff' },
+  { icon: Users, label: '70+ Members', color: '#00f0ff' },
   { icon: Zap,   label: 'AI & ML Focus', color: '#7c3aed' },
   { icon: Globe, label: 'VIT Bhopal',    color: '#10b981' },
 ];
@@ -20,7 +20,7 @@ export default function HomeAbout() {
   return (
     <section
       id="about-us"
-      style={{ padding: '120px 0 100px', position: 'relative', overflow: 'hidden' }}
+      style={{ padding: 'clamp(64px,10vw,120px) 0 clamp(60px,8vw,100px)', position: 'relative', overflow: 'hidden' }}
     >
       {/* Ambient glows */}
       <div style={{
@@ -34,7 +34,7 @@ export default function HomeAbout() {
         pointerEvents: 'none',
       }} />
 
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 32px' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 clamp(16px,4vw,32px)' }}>
 
         {/* ── Section badge ── */}
         <motion.div
@@ -65,7 +65,7 @@ export default function HomeAbout() {
         </motion.div>
 
         {/* ── Main two-column grid ── */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 28, alignItems: 'start' }}>
+        <div className="home-about-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 28, alignItems: 'start' }}>
 
           {/* ── LEFT COLUMN ── */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
@@ -77,10 +77,12 @@ export default function HomeAbout() {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
               style={{
-                background: 'rgba(255,255,255,0.025)', backdropFilter: 'blur(20px)',
+                background: 'rgba(255,255,255,0.025)', backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
                 border: '1px solid rgba(255,255,255,0.08)',
-                borderRadius: 24, padding: '36px',
+                borderRadius: 24, padding: 'clamp(20px,4vw,36px)',
                 position: 'relative', overflow: 'hidden',
+                transform: 'translateZ(0)',
               }}
             >
               <div style={{

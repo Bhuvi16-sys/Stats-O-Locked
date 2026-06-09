@@ -16,10 +16,17 @@
   box-sizing: border-box;
 }
 
+/* Hide default cursor on pointer devices; keep it on touch */
+@media (pointer: fine) {
+  * { cursor: none !important; }
+}
+
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  -webkit-overflow-scrolling: touch;
+  overflow-x: hidden;
 }
 
 body {
@@ -64,27 +71,29 @@ h1, h2, h3, h4 {
   position: absolute;
   border-radius: 50%;
   will-change: transform;
-  filter: blur(80px);
+  transform: translateZ(0);
+  filter: blur(60px);
+  contain: layout style paint;
 }
 .ambient-orb--cyan {
   top: -10%; left: -10%;
-  width: 45vw; height: 45vw;
+  width: 38vw; height: 38vw;
   background: #00f0ff;
-  opacity: 0.18;
+  opacity: 0.16;
   animation: orb-cyan 25s ease-in-out infinite;
 }
 .ambient-orb--purple {
   bottom: -15%; right: -15%;
-  width: 45vw; height: 45vw;
+  width: 38vw; height: 38vw;
   background: #7c3aed;
-  opacity: 0.2;
+  opacity: 0.18;
   animation: orb-purple 30s ease-in-out infinite;
 }
 .ambient-orb--blue {
   top: 20%; right: -10%;
-  width: 40vw; height: 40vw;
+  width: 33vw; height: 33vw;
   background: #3b82f6;
-  opacity: 0.15;
+  opacity: 0.13;
   animation: orb-blue 28s ease-in-out infinite;
 }
 
@@ -237,19 +246,126 @@ h1, h2, h3, h4 {
 .horizontal-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
 .horizontal-scroll::-webkit-scrollbar-thumb { background: var(--purple); border-radius: 2px; }
 
-/* Cursor glow — positioned with transform only (zero layout cost) */
-#cursor-glow {
-  pointer-events: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 350px;
-  height: 350px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(124, 58, 237, 0.12) 0%, rgba(0, 240, 255, 0.06) 40%, transparent 70%);
-  will-change: transform;
-  z-index: 9999;
-  mix-blend-mode: screen;
+/* ── Cursor spin keyframes (compositor thread) ── */
+@keyframes cur-cw  { to { transform: rotate( 360deg); } }
+@keyframes cur-ccw { to { transform: rotate(-360deg); } }
+
+/* ── Custom cursor (pointer devices only) ── */
+@media (pointer: fine) {
+
+  /* 1. Crosshair — snaps exactly to pointer, rotates 45° on hover */
+  #cursor-dot {
+    pointer-events: none;
+    position: fixed; top: 0; left: 0;
+    width: 18px; height: 18px;
+    will-change: transform;
+    z-index: 999999;
+  }
+  #cursor-dot::before,
+  #cursor-dot::after {
+    content: '';
+    position: absolute;
+    border-radius: 1px;
+    transition: background 0.22s, box-shadow 0.22s;
+  }
+  /* Horizontal arm */
+  #cursor-dot::before {
+    top: 50%; left: 0; right: 0; height: 1.5px;
+    transform: translateY(-50%);
+    background: linear-gradient(90deg,
+      rgba(0,240,255,0.95) 0%,       rgba(0,240,255,0.95) calc(50% - 3.5px),
+      transparent          calc(50% - 3.5px), transparent  calc(50% + 3.5px),
+      rgba(0,240,255,0.95) calc(50% + 3.5px), rgba(0,240,255,0.95) 100%
+    );
+    box-shadow: 0 0 5px rgba(0,240,255,0.65);
+  }
+  /* Vertical arm */
+  #cursor-dot::after {
+    left: 50%; top: 0; bottom: 0; width: 1.5px;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg,
+      rgba(0,240,255,0.95) 0%,       rgba(0,240,255,0.95) calc(50% - 3.5px),
+      transparent          calc(50% - 3.5px), transparent  calc(50% + 3.5px),
+      rgba(0,240,255,0.95) calc(50% + 3.5px), rgba(0,240,255,0.95) 100%
+    );
+    box-shadow: 0 0 5px rgba(0,240,255,0.65);
+  }
+  #cursor-dot.cur-hover::before {
+    background: linear-gradient(90deg,
+      rgba(192,132,252,0.95) 0%,       rgba(192,132,252,0.95) calc(50% - 3.5px),
+      transparent            calc(50% - 3.5px), transparent    calc(50% + 3.5px),
+      rgba(192,132,252,0.95) calc(50% + 3.5px), rgba(192,132,252,0.95) 100%
+    );
+    box-shadow: 0 0 5px rgba(192,132,252,0.65);
+  }
+  #cursor-dot.cur-hover::after {
+    background: linear-gradient(180deg,
+      rgba(192,132,252,0.95) 0%,       rgba(192,132,252,0.95) calc(50% - 3.5px),
+      transparent            calc(50% - 3.5px), transparent    calc(50% + 3.5px),
+      rgba(192,132,252,0.95) calc(50% + 3.5px), rgba(192,132,252,0.95) 100%
+    );
+    box-shadow: 0 0 5px rgba(192,132,252,0.65);
+  }
+
+  /* 2. Inner arc ring — 28px, CW, cyan, trails slightly */
+  #cursor-inner {
+    pointer-events: none;
+    position: fixed; top: 0; left: 0;
+    width: 28px; height: 28px;
+    will-change: transform;
+    z-index: 999998;
+  }
+  #cursor-inner .cur-arc {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    border: 1.5px solid rgba(0,240,255,0.7);
+    border-top-color:    transparent;
+    border-bottom-color: transparent;
+    animation: cur-cw 1.6s linear infinite;
+    transition: border-color 0.2s, animation-duration 0.2s;
+  }
+  #cursor-inner.cur-hover .cur-arc {
+    border-color:        rgba(192,132,252,0.9);
+    border-top-color:    transparent;
+    border-bottom-color: transparent;
+    animation-duration: 0.4s;
+  }
+
+  /* 3. Outer arc ring — 48px, CCW, purple, slower trail */
+  #cursor-outer {
+    pointer-events: none;
+    position: fixed; top: 0; left: 0;
+    width: 48px; height: 48px;
+    will-change: transform;
+    z-index: 999997;
+  }
+  #cursor-outer .cur-arc {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    border: 1px solid rgba(124,58,237,0.5);
+    border-left-color:  transparent;
+    border-right-color: transparent;
+    animation: cur-ccw 2.8s linear infinite;
+    transition: border-color 0.2s;
+  }
+  #cursor-outer.cur-hover .cur-arc {
+    border-color:       rgba(192,132,252,0.7);
+    border-left-color:  transparent;
+    border-right-color: transparent;
+    animation-duration: 0.8s;
+  }
+
+  /* 4. Ambient glow blob — very slow trail */
+  #cursor-glow {
+    pointer-events: none;
+    position: fixed; top: 0; left: 0;
+    width: 350px; height: 350px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(124,58,237,0.13) 0%, rgba(0,240,255,0.07) 40%, transparent 70%);
+    will-change: transform;
+    z-index: 9997;
+    mix-blend-mode: screen;
+  }
 }
 
 /* Intro overlay */
@@ -268,4 +384,29 @@ h1, h2, h3, h4 {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+}
+
+/* ── Mobile responsive overrides ─────────────────────────────── */
+@media (max-width: 640px) {
+  .home-about-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .about-two-col {
+    grid-template-columns: 1fr !important;
+  }
+  .about-four-col {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .contact-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .contact-form-row {
+    grid-template-columns: 1fr !important;
+  }
+  .events-detail-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .section-pad {
+    padding: 64px 0 !important;
+  }
 }

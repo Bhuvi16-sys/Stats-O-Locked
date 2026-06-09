@@ -75,8 +75,8 @@ const INTENTS = [
     keys: ['how many members', 'member count', 'size', 'how big', 'how many people'],
     action: 'text',
     replies: [
-      "200+ active members and growing every semester! 🎓",
-      "Over 200 passionate minds! 🤩 New members join every induction season.",
+      "70+ active members and growing every semester! 🎓",
+      "Over 70 passionate minds! 🤩 New members join every induction season.",
     ],
     chips: ['Join?', 'Events', 'Team'],
   },
@@ -157,7 +157,7 @@ const FALLBACK_REPLIES = [
 ];
 const IDLE_COMMENTS = [
   "Psst! Check out our Events 🎪",
-  "SOL has 200+ members! 🤓",
+  "SOL has 70+ members! 🤓",
   "Explore our Team page 👀",
   "Want to join SOL? Ask me! 💫",
   "TechCorp Summit was epic 🚀",
