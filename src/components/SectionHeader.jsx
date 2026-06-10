@@ -19,7 +19,7 @@ export default function SectionHeader({ badge, title, subtitle, align = 'center'
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.35 }}
-      style={{ textAlign: align, marginBottom: '70px' }}
+      style={{ textAlign: align, marginBottom: 'clamp(36px,6vw,70px)' }}
     >
       {badge && (
         <span
@@ -60,7 +60,7 @@ export default function SectionHeader({ badge, title, subtitle, align = 'center'
           style={{
             color: 'rgba(255,255,255,0.5)',
             fontSize: '1rem',
-            maxWidth: '500px',
+            maxWidth: 'min(500px, 100%)',
             margin: align === 'center' ? '0 auto' : '0',
             lineHeight: 1.7,
           }}

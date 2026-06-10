@@ -28,7 +28,7 @@ export default function PageLayout({ children, title, subtitle, maxWidth = 'max-
 
       {/* Central main content wrapper */}
       <div
-        className={`relative z-10 w-full ${maxWidth} min-h-screen flex flex-col px-6 md:px-10 lg:px-16 bg-[#020b16]/60 backdrop-blur-xl border border-white/10 border-t-white/20 shadow-2xl overflow-hidden`}
+        className={`relative z-10 w-full ${maxWidth} min-h-screen flex flex-col px-3 sm:px-6 md:px-10 lg:px-16 bg-[#020b16]/60 backdrop-blur-xl border border-white/10 border-t-white/20 shadow-2xl overflow-hidden`}
         style={{ paddingTop: 'clamp(100px,14vw,160px)', paddingBottom: 'clamp(60px,8vw,96px)' }}
       >
         {/* Top Edge Glow (Cyan) */}
@@ -76,7 +76,7 @@ export default function PageLayout({ children, title, subtitle, maxWidth = 'max-
         )}
 
         <div className="w-full flex-1 flex flex-col items-center">
-          <div className="glass-card w-full p-8 md:p-12 relative">
+          <div className="glass-card w-full p-4 sm:p-8 md:p-12 relative">
             {children}
           </div>
         </div>
